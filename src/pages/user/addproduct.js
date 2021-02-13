@@ -21,9 +21,6 @@ import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 import moment from "moment";
 
-// import "../../assets/css/bootstrap.min.css"
-
-
 const menuItems = [
   {
     id: 1,
@@ -68,18 +65,19 @@ class AddProduct extends Component {
       commissionType: "",
       commission: 0,
       itemList: [],
-      qty: 0,
+      qty: "",
       description: "",
       itemcategory: "",
       itemName: "",
-      price: 0,
+      price: "",
       workDoneBy: "",
-      discount: 0,
-      advance: 0,
-      totalPrice: 0,
-      totalAmoutDue: 0,
+      discount: "",
+      advance: "",
+      totalPrice: "",
+      totalAmoutDue:"",
       customerName:"",
-      phoneNumber:""
+      phoneNumber:"",
+      id:0
     };
   }
 
@@ -105,6 +103,8 @@ class AddProduct extends Component {
 
   componentDidMount() {
     // this.jqueryScripts();
+    $('#example').DataTable().destroy();
+
 
     window.scrollTo(0, 0);
   }
@@ -159,12 +159,16 @@ class AddProduct extends Component {
   };
 
   addProduct = () => {
-    var totalPriceAddition =
-      this.state.totalPrice +
-      this.state.price * this.state.qty -
-      this.state.discount;
+
+    var itemTotal = this.state.price * this.state.qty;
+    var itemTotalWithDiscount = 0;
+    if(this.state.discount > 0){
+      itemTotalWithDiscount = (itemTotal*this.state.discount)/100
+    }
+    var totalPriceAddition =this.state.totalPrice + (itemTotal) - itemTotalWithDiscount;
 
     let formdata = {
+      id:this.state.id,
       itemName: this.state.itemName,
       description: this.state.description,
       price: this.state.price,
@@ -173,6 +177,7 @@ class AddProduct extends Component {
       itemcategory: this.state.itemcategory,
       workDoneBy: this.state.workDoneBy,
       commission: this.state.commission,
+      commissionType :this.state.commissionType
     };
 
     var arrayList = this.state.itemList;
@@ -181,33 +186,60 @@ class AddProduct extends Component {
       itemList: arrayList,
       totalPrice: totalPriceAddition,
       totalAmoutDue: totalPriceAddition,
+      id:this.state.id + 1 
     });
+    $('#example').DataTable().destroy();
 
+    this.jqueryScripts();
     this.resetHandler();
   };
 
   commissionTypeChange = (e) => {
-    this.setState({
-      commissionType: e.target.value,
-    });
+    var itemTotalForCommission = (this.state.price * this.state.qty);
+    var commission;
+    if(e.target.value == '1'){
+      //commission : 5%
+
+       commission = (itemTotalForCommission*5)/100 ;
+      this.setState({
+        commission:commission,
+        commissionType:e.target.value
+      })
+    }
+    if(e.target.value == '2'){
+      //commission : 15%
+       commission = (itemTotalForCommission*15)/100 ;
+      this.setState({
+        commission:commission,
+        commissionType:e.target.value
+      })
+    }
+    if(e.target.value == '3'){
+      //commission : other
+      this.setState({
+        commissionType:e.target.value
+      })
+    }
 
   };
 
   selectHandler = (id) => {
+    let itemFromPriceList = this.state.itemList;
+
+    var item = itemFromPriceList.filter(item => item.id == id);
+    var itemFirst = item[0];
+    console.log(item);
+
     this.setState({
-      commissionType: "",
-      commission: 0,
-      itemList: [],
-      qty: 0,
-      description: "",
-      itemcategory: "",
-      itemName: "",
-      price: 0,
-      workDoneBy: "",
-      discount: 0,
-      advance: 0,
-      totalPrice: 0,
-      totalAmoutDue: 0,
+      commissionType:itemFirst.commissionType,
+      commission:itemFirst.commission ,
+      qty: itemFirst.qty,
+      description: itemFirst.description,
+      itemcategory:itemFirst.itemcategory,
+      itemName:itemFirst.itemName,
+      price:itemFirst.price,
+      workDoneBy:itemFirst.workDoneBy,
+      discount:itemFirst.discount,
     })
    
   };
@@ -239,63 +271,84 @@ class AddProduct extends Component {
 
   renderPrintValues = (contetnts) => {
     let tableContent =
-      contetnts === undefined
-        ? null
-        : contetnts.map((item) => {
-            return (
-              <tr>
-                <td>{item.itemcategory}</td>
-                <td>{item.itemName}</td>
-                <td>{item.description}</td>
-                <td>{item.price}</td>
-                <td>{item.qty}</td>
-                <td>{item.discount}</td>
-              </tr>
-            );
-          });
-    return (
-      // <Table striped bordered hover id="example">
-      <div class="table-responsive">
-        {/* <table id="example" class="display dataTable no-footer" cellspacing="0" width="100%"> */}
-        <Table striped bordered hover id="example">
-          <thead>
-            <tr>
-              <th>Product Category</th>
-              <th>Product Name</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Discount</th>
+    contetnts === undefined
+      ? null
+      : contetnts.map((item) => {
+
+        let itemTotal = (item.price * item.qty);
+        let itemDiscount = (itemTotal * item.discount)/100;
+
+          return (
+            <tr key={item.id}>
+              <td>{item.itemName}</td>
+              <td>{item.description}</td>
+              <td>{item.price}</td>
+              <td>{item.qty}</td>
+              <td>{item.discount}%</td>
+              <td>{itemTotal-itemDiscount}</td>
             </tr>
-          </thead>
-          <tbody>{tableContent}</tbody>
-          <tfoot>
+          );
+        });
+  return (
+    // <Table striped bordered hover id="example">
+    <div class="table-responsive">
+      {/* <table id="example" class="display dataTable no-footer" cellspacing="0" width="100%"> */}
+      <table className="table-bordered hover" id="example" style={{width:"100%"}}>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Discount</th>
+            <th>Item Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableContent}
+
+        </tbody>
+        <tfoot>
             <tr>
-              <td>Total Price : {this.state.totalPrice}</td>
-              <td>Advance : {this.state.advance}</td>
-              <td>Amount Due : {this.state.totalAmoutDue}</td>
+              <td colSpan="4"></td>
+              <td>Total Price : </td>
+              <td>{this.state.totalPrice}</td>
+            </tr>
+            <tr>
+              <td colSpan="4"></td>
+              <td>Advance : </td>
+              <td>{this.state.advance}</td>
+            </tr> <tr>
+              <td colSpan="4"></td>
+              <td>Amount Due : </td>
+              <td>{this.state.totalAmoutDue}</td>
             </tr>
           </tfoot>
-        </Table>
-      </div>
-    );
+      </table>
+    </div>
+  );
   };
 
   //display values to table
-
+        
   renderDisplayTable = (contetnts) => {
     let tableContent =
       contetnts === undefined
         ? null
         : contetnts.map((item) => {
+
+          let itemTotal = (item.price * item.qty);
+          let itemDiscount = (itemTotal * item.discount)/100;
+
             return (
-              <tr>
+              <tr key={item.id}>
                 <td>{item.itemcategory}</td>
                 <td>{item.itemName}</td>
                 <td>{item.description}</td>
                 <td>{item.price}</td>
                 <td>{item.qty}</td>
-                <td>{item.discount}</td>
+                <td>{item.discount}%</td>
+                <td>{itemTotal-itemDiscount}</td>
                 <td>{item.workDoneBy}</td>
                 <td>{item.commission}</td>
 
@@ -304,7 +357,7 @@ class AddProduct extends Component {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={(e) => this.selectHandler(item._id)}
+                    onClick={(e) => this.selectHandler(item.id)}
                   >
                     EDIT
                   </button>
@@ -324,7 +377,7 @@ class AddProduct extends Component {
       // <Table striped bordered hover id="example">
       <div class="table-responsive">
         {/* <table id="example" class="display dataTable no-footer" cellspacing="0" width="100%"> */}
-        <Table striped bordered hover id="example">
+        <Table className="table-striped table-bordered hover" id="example">
           <thead>
             <tr>
               <th>Product Category</th>
@@ -333,6 +386,7 @@ class AddProduct extends Component {
               <th>Price</th>
               <th>Qty</th>
               <th>Discount</th>
+              <th>Item Total</th>
               <th>WDB</th>
               <th>Commission</th>
               <th>Edit</th>
@@ -353,14 +407,14 @@ class AddProduct extends Component {
   resetHandler = () => {
     this.setState({
       commissionType: "",
-      commission: 0,
-      qty: 0,
+      commission: "",
+      qty: "",
       description: "",
       itemcategory: "",
       itemName: "",
-      price: 0,
+      price: "",
       workDoneBy: "",
-      discount: 0,
+      discount: "",
     
     });
   };
@@ -385,20 +439,19 @@ class AddProduct extends Component {
     }
 
     console.log(formdata)
-
+    this.printHandler();
   }
 
   //printhandler******************************************************
   printHandler = (event) => {
     var mywindow = window.open("", "PRINT", "height=600,width=1000");
     mywindow.document.write("<html> <body>");
-    // mywindow.document.write(
-    //   '<link rel="stylesheet" href="../../assets/css/bootstrap.min.css" type="text/css" />'
-    //   );
-    // mywindow.document.write(
-    // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />'   );
     mywindow.document.write(
-      ' <center> <h3><strong>TASHMA PHOTO STUDIO & DIGITAL LAB<hr/></strong></h3>  </center>'
+      '<link rel="stylesheet" href="../../../public/bootstrap.min.css" type="text/css" />'
+      );
+
+       mywindow.document.write(
+      '<div> <img src="../../../public/tashmalogo.jpg" width="100" height="100"/><center> <h3><strong>TASHMA PHOTO STUDIO & DIGITAL LAB<hr/></strong></h3>  </center></div>'
     );
     // mywindow.document.write('<div class-"container" id="width">');
 
@@ -410,17 +463,22 @@ class AddProduct extends Component {
         "</strong><br/>"
     );
     mywindow.document.write(
+      "Customer Name:TEST <br/>"
+    );
+    mywindow.document.write(
+      "Phone Number :0757547686 <br/>"
+    );
+    mywindow.document.write(
       "OrderNo:423422 <br/>"
     );
     mywindow.document.write(
-     "Issued By:Ranil"
+     "Issued By:Test"
     );
-    mywindow.document.write("<br/><br/><br/><div>");
+    mywindow.document.write("<br/><br/><br/>");
     mywindow.document.write(
-      '<div style="margin-left:90mm;margin-top:-6mm;">'
-    
+      '<div>'
     );
-        mywindow.document.write(document.getElementById("printContent").innerHTML);
+    mywindow.document.write(document.getElementById("printContent").innerHTML);
     mywindow.document.write("<br/><br/></div>");
 
     // mywindow.document.write("</div>");
@@ -456,10 +514,6 @@ class AddProduct extends Component {
               <center>
                 <img src={LOGO} style={{ width: "250px" }} />
               </center>
-              {/* <img src={'./src/assets/images/premiumlogo.jpg'}/> */}
-              {/* <div>
-                      <img src={LOGO} style={{width:"auto"},{height:"50vh"}}/>
-                      </div> */}
               <SideNav
                 items={menuItems}
                 linkComponent={NavLink}
@@ -644,7 +698,7 @@ class AddProduct extends Component {
                         <div className="col-md-3">
                           <div className="form-group">
                             <label>
-                              <strong>Discount</strong>
+                              <strong>Discount(%)</strong>
                             </label>
 
                             <input
@@ -800,11 +854,12 @@ class AddProduct extends Component {
                             <input
                               id="form_email"
                               type="number"
+                              
                               name="email"
                               className="form-control"
-                              placeholder="Price"
+                              placeholder="Amount Due"
                               required="required"
-                              value={this.state.totalAmoutDue}
+                              value={(this.state.totalAmoutDue)}
                               disabled
                               onChange={(e) => (e) =>
                                 this.totalAmuntDueChange(e)}
@@ -823,7 +878,7 @@ class AddProduct extends Component {
                               type="number"
                               name="email"
                               className="form-control"
-                              placeholder="Price"
+                              placeholder="Total Amount"
                               required="required"
                               value={this.state.totalPrice}
                               disabled
@@ -843,7 +898,7 @@ class AddProduct extends Component {
                             hidden={this.state.isDisable}
                             onClick={this.searchAndPrint}
                           >
-                            🖶 PRINT
+                            🖶 SAVE & PRINT
                           </button>
                         </div>
                       </div>

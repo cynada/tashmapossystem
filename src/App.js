@@ -32,7 +32,7 @@ import AddUser from "./pages/admin/adduser";
 import AddOrder from "./pages/user/addproduct";
 import SearchOrder from "./pages/user/searchorder";
 import SingleOrder from "./pages/user/viewsingleorder";
-
+import SearchOrders from "./pages/user/searchorders";
 
 
 
@@ -67,6 +67,8 @@ class App extends React.Component {
       : `/${pathArray[1]}` === "/user-vieworders"
       ? true
       : `/${pathArray[1]}` === "/user-addorder" 
+      ? true
+      : `/${pathArray[1]}` === "/user-searchorders" 
       ?true
       : false;
   }
@@ -107,7 +109,8 @@ class App extends React.Component {
             <Route path="/user-searchorder" component={SearchOrder} />
             <Route path="/user-addorder" component={AddOrder} />
             <Route path="/user-vieworders" component={SingleOrder} />
-
+            <Route path="/user-searchorders" component={SearchOrders} />
+            
           </Switch>
         ) : (
           <div className="page-wrapper">

@@ -79,7 +79,7 @@ class Login extends Component {
                 <div>
                   <img
                     src={LOGO}
-                    style={({ width: "auto" }, { height: "40vh" })}
+                    style={({ width: "100%" , height: "40vh" })}
                   />
                 </div>
                 <h2 className="text-center mb-3">
