@@ -519,26 +519,6 @@ class AddProduct extends Component {
                       <div className="row">
                         <div className="col-md-6">
                           <div className="form-group">
-                            <input
-                              id="form_email"
-                              type="text"
-                              name="email"
-                              className="form-control"
-                              placeholder="Brand"
-                              required="required"
-                              value={this.state.brand}
-                              onChange={(e) =>
-                                this.setState({ brand: e.target.value })
-                              }
-                              data-error="Valid email is required."
-                            />
-                            <div className="help-block with-errors" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="form-group">
                           <label>
                               <strong>Description</strong>
                             </label>
