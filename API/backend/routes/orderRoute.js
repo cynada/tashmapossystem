@@ -134,10 +134,10 @@ router.post("/", async (req, res) => {
                         });
                       }
                       var OrderId = results[0].orderId;
-
+                      console.log(req.body.Orders);
                       req.body.Orders.map((item) => {
                         mysqlConnection.query(
-                          `CALL InsertOrderDetailsItem(${OrderId}, '${item.Category}', '${item.Name}', '${item.Description}', ${item.Qty}, ${item.Price}, ${item.Discount}, ${item.WorkDoneBy}, ${item.Commission}, ${User});`,
+                          `CALL InsertOrderDetailsItem(${OrderId}, ${item.CategoryId}, ${item.ProductId}, '${item.Description}', ${item.Qty}, ${item.Price}, ${item.Discount}, ${item.WorkDoneBy}, ${item.Commission}, ${User});`,
                           (error, results, fields) => {
                             if (error) {
                               return mysqlConnection.rollback(() => {
