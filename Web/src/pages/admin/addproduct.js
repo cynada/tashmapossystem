@@ -66,7 +66,8 @@ class AddProduct extends Component {
       productName: "",
       description: "",
       categoryId: -1,
-      instock: "",
+      sellingPrice: "",
+      qty:"",
       category: "",
       brand: "",
       editProductId: "",
@@ -97,6 +98,17 @@ class AddProduct extends Component {
         console.log("GG" + json);
         this.setState({
           productList: json,
+        });
+      })
+      .then(() => {
+        this.jqueryScripts();
+      });
+    CommonGet("categories", "")
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("GG" + json);
+        this.setState({
+          categoryList: json,
         });
       })
       .then(() => {
@@ -183,14 +195,14 @@ class AddProduct extends Component {
 
   addProduct = () => {
     let formdata = {
-      name: this.state.productName,
-      description: this.state.description,
-      price: this.state.price,
-      image: this.state.base64string,
-      brand: this.state.brand,
-      countInStock: this.state.instock,
-      category: this.state.category,
+      CategoryId: this.state.categoryId,
+      Name: this.state.productName,
+      Description:this.state.description,
+      BuyingPrice: this.state.price,
+      SellingPrice: this.state.sellingPrice,
+      Quantity: this.state.qty,
     };
+    console.log(formdata);
     CommonPost("products", formdata)
       .then((res) => res.json())
       .then((json) => {
@@ -228,7 +240,7 @@ class AddProduct extends Component {
 
   categoryChange = (e) => {
     this.setState({
-      category: e.target.value,
+      categoryId: e.target.value,
     });
   };
 
@@ -292,21 +304,14 @@ class AddProduct extends Component {
             let imageURL = item.image;
             return (
               <tr key={item._id}>
-                <td>
-                  <img src={imageURL} style={{ height: "100px" }}></img>
-                </td>
-                <td>{item.category}</td>
-                <td>{item.name}</td>
-                <td>{item.price}</td>
-                <td>
-                  {" "}
-                  <input
-                    id="id2"
-                    type="checkbox"
-                    defaultChecked //={prList.isActive}
-                    // onChange={e => this.selectHandler(prList.id)}
-                  />
-                </td>
+                <td>{item.CategoryName}</td>
+                <td>{item.Name}</td>
+                <td>{item.BuyingPrice}</td>
+                <td>{item.Quantity}</td>
+                <td>{item.SellingPrice}</td>
+                <td>{item.Description}</td>
+
+                
                 <td>
                   {" "}
                   <button
@@ -335,11 +340,12 @@ class AddProduct extends Component {
         <Table striped bordered hover id="example">
           <thead>
             <tr>
-              <th>Product Image</th>
               <th>Product Category</th>
               <th>Product Name</th>
-              <th>Price</th>
+              <th>Bought Price</th>
               <th>Qty</th>
+              <th>Selling Price</th>
+              <th>Description</th>
               <th></th>
               <th></th>
             </tr>
@@ -394,17 +400,47 @@ class AddProduct extends Component {
       showCancelButton: true,
       confirmButtonText: "Submit",
       showLoaderOnConfirm: true,
-      preConfirm: (login) => {
-        return fetch(`//api.github.com/users/${login}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(response.statusText);
-            }
-            return response.json();
+      preConfirm: (name) => {
+        let formdata = {
+          CategoryName: name,
+        };
+
+        CommonPost("categories", formdata)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            Swal.fire({
+              position: "bottom",
+              //icon: 'success',
+              title: `${json.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
           })
-          .catch((error) => {
-            Swal.showValidationMessage(`Request failed: ${error}`);
+          .then(() => {
+            CommonGet("categories", "")
+              .then((res) => res.json())
+              .then((json) => {
+                console.log("GG" + json);
+                this.setState({
+                  categoryList: json,
+                });
+              })
+              .then(() => {
+                this.jqueryScripts();
+              });
           });
+
+        // return fetch(`//api.github.com/users/${name}`)
+        //   .then((response) => {
+        //     if (!response.ok) {
+        //       throw new Error(response.statusText);
+        //     }
+        //     return response.json();
+        //   })
+        //   .catch((error) => {
+        //     Swal.showValidationMessage(`Request failed: ${error}`);
+        //   });
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then((result) => {
@@ -417,9 +453,30 @@ class AddProduct extends Component {
     });
   };
 
+  renderCategoryDrop = (cate) => {
+    let optionItems =
+      cate == null || cate == undefined
+        ? null
+        : cate.map((item) => (
+            <option key={item.Id} value={item.Id}>{item.CategoryName}</option>
+          ));
+
+    return (
+      <select
+        value={this.state.categoryId}
+        className="form-control"
+        onChange={(e) => this.categoryChange(e)}
+      >
+        <option key = "-1" value="-1">Please select a category</option>
+        {optionItems}
+      </select>
+    );
+  };
+
   render() {
     let imageURL = this.state.base64string;
     let table = this.renderDisplayTable(this.state.productList);
+    let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     return (
       <div className="page-content">
         <div className="row">
@@ -480,7 +537,8 @@ class AddProduct extends Component {
                             <label>
                               <strong>Category</strong>
                             </label>
-                            <select
+                            {categorydrop}
+                            {/* <select
                               className="form-control"
                               value={this.state.category}
                               onChange={(e) =>
@@ -491,12 +549,12 @@ class AddProduct extends Component {
                               <option value="Albums">Albums</option>
                               <option value="DesignPhoto">DesignPhoto</option>
                               <option value="Photo">Photo</option>
-                            </select>
+                            </select> */}
                           </div>
                         </div>
                         <div className="col-md-6">
                           <div className="form-group">
-                          <label>
+                            <label>
                               <strong>Name</strong>
                             </label>
                             <input
@@ -519,7 +577,7 @@ class AddProduct extends Component {
                       <div className="row">
                         <div className="col-md-6">
                           <div className="form-group">
-                          <label>
+                            <label>
                               <strong>Description</strong>
                             </label>
                             <textarea
@@ -537,10 +595,9 @@ class AddProduct extends Component {
                         </div>
                       </div>
                       <div className="row">
-                        
                         <div className="col-md-3">
                           <div className="form-group">
-                          <label>
+                            <label>
                               <strong>Buying Price</strong>
                             </label>
                             <input
@@ -561,7 +618,7 @@ class AddProduct extends Component {
                         </div>
                         <div className="col-md-3">
                           <div className="form-group">
-                          <label>
+                            <label>
                               <strong>Qty</strong>
                             </label>
                             <input
@@ -571,9 +628,9 @@ class AddProduct extends Component {
                               className="form-control"
                               placeholder="Qty"
                               required="required"
-                              value={this.state.instock}
+                              value={this.state.qty}
                               onChange={(e) =>
-                                this.setState({ instock: e.target.value })
+                                this.setState({ qty: e.target.value })
                               }
                               data-error="Price is required."
                             />
@@ -582,7 +639,7 @@ class AddProduct extends Component {
                         </div>
                         <div className="col-md-3">
                           <div className="form-group">
-                          <label>
+                            <label>
                               <strong>Selling Price</strong>
                             </label>
                             <input
@@ -592,9 +649,9 @@ class AddProduct extends Component {
                               className="form-control"
                               placeholder="Price"
                               required="required"
-                              value={this.state.price}
+                              value={this.state.sellingPrice}
                               onChange={(e) =>
-                                this.setState({ price: e.target.value })
+                                this.setState({ sellingPrice: e.target.value })
                               }
                               data-error="Price is required."
                             />

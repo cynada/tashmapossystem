@@ -116,6 +116,7 @@ router.post("/", async (req, res) => {
               var IsCompleted = JSON.parse(req.body.IsCompleted);
               var CompletedDate = req.body.CompletedDate;
 
+              console.log(OrderTotal);
               mysqlConnection.query(
                 `CALL InsertOrderDetails(${CustomerId}, ${OrderTotal}, ${AdvancePayment}, ${AmountDue}, ${IsCompleted}, ${CompletedDate}, ${User}, @orderId);`,
                 (error, results, fields) => {

@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 
-var token = sessionStorage.getItem("token");
-var api = "https://premiumlkapi.herokuapp.com/api";
+var api = "http://localhost:5000/api";
 
 export const CommonGet = (controller, queryString) => {
   const requestOptions = {
     method: "GET",
     headers: {
-      Authorization: `bearer ${token}`,
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
@@ -21,7 +19,6 @@ export const CommonGetById = (controller, queryString) => {
   const requestOptions = {
     method: "GET",
     headers: {
-      Authorization: `bearer ${token}`,
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers":"Authorization"
@@ -40,7 +37,6 @@ export const CommonPost = (controller, requestbody) => {
   const requestOptions = {
     method: "POST",
     headers: {
-      Authorization: `bearer ${token}`,
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       
@@ -54,7 +50,6 @@ export const CommonDeleteById = (controller, queryString) => {
   const requestOptions = {
     method: "DELETE",
     headers: { 
-      Authorization: `bearer ${token}`,
       "Content-Type": "application/json" },
   };
 
@@ -85,7 +80,6 @@ export const CommonUpdateById = (controller, queryString, requestbody) => {
   const requestOptions = {
     method: "PUT",
     headers: {
-      Authorization: `bearer ${token}`,
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
