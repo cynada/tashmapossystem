@@ -26,25 +26,27 @@ const menuItems = [
     label: "Manage Products",
     icon: "fas fa-battery-half",
     link: "/admin-addproducts",
-    items: [
-      { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-      { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-    ],
   },
   {
     id: 2,
+    label: "Manage Users",
+    icon: "fas fa-battery-half",
+    link: "/admin-adduser",
+  },
+  {
+    id: 3,
     label: "View Orders",
     icon: "fas fa-battery-half",
     link: "/admin-vieworders",
   },
   {
-    id: 3,
+    id: 4,
     label: "View Sales",
     icon: "fas fa-battery-half",
     link: "/admin-viewsales",
   },
   {
-    id: 4,
+    id: 5,
     label: "Log Out",
     icon: "fas fa-battery-half",
     link: "/admin-login",
@@ -471,18 +473,37 @@ class AddUser extends Component {
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-md-6">
+                      <div className="col-md-6">
                           <div className="form-group">
                             <input
                               id="form_email"
                               type="text"
+                              name="EPF"
+                              className="form-control"
+                              placeholder="EPF No"
+                              required="required"
+                              value={this.state.epf}
+                              onChange={(e) =>
+                                this.setState({ epf: e.target.value })
+                              }
+                              data-error="Valid email is required."
+                            />
+                            <div className="help-block with-errors" />
+                          </div>
+                        </div>
+                   
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <input
+                              id="form_email"
+                              type="number"
                               name="email"
                               className="form-control"
-                              placeholder="Brand"
+                              placeholder="Salary"
                               required="required"
-                              value={this.state.brand}
+                              value={this.state.salary}
                               onChange={(e) =>
-                                this.setState({ brand: e.target.value })
+                                this.setState({ salary: e.target.value })
                               }
                               data-error="Valid email is required."
                             />
@@ -575,7 +596,7 @@ class AddUser extends Component {
                             className="btn btn-primary"
                             onClick={this.editProduct}
                           >
-                            UPDATE PRODUCT
+                            UPDATE USER
                           </button>
                         </div>
                         <div className="col-md-3" hidden={!this.state.isEdit}>
@@ -594,7 +615,7 @@ class AddUser extends Component {
                             hidden={this.state.isDisable}
                             onClick={this.addProduct}
                           >
-                            ADD PRODUCT
+                            ADD USER
                           </button>
                         </div>
                       </div>
