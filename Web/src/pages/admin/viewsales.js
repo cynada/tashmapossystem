@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {DropdownButton ,ButtonGroup ,Dropdown } from 'react-bootstrap'
 import { Bar, Line, Pie, Doughnut, Polar } from "react-chartjs-2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 
@@ -11,25 +11,27 @@ const menuItems = [
     label: "Manage Products",
     icon: "fas fa-battery-half",
     link: "/admin-addproducts",
-    items: [
-      { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-      { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-    ],
   },
   {
     id: 2,
+    label: "Manage Users",
+    icon: "fas fa-battery-half",
+    link: "/admin-adduser",
+  },
+  {
+    id: 3,
     label: "View Orders",
     icon: "fas fa-battery-half",
     link: "/admin-vieworders",
   },
   {
-    id: 3,
+    id: 4,
     label: "View Sales",
     icon: "fas fa-battery-half",
     link: "/admin-viewsales",
   },
   {
-    id: 4,
+    id: 5,
     label: "Log Out",
     icon: "fas fa-battery-half",
     link: "/admin-login",
@@ -120,6 +122,12 @@ class viewsales extends Component {
                        <p className="lead mb-0 ">Tashma Studio & Digital Lab</p>{" "}
                       <p className="lead mb-0 ic-2x rotation 90">📸</p>
                     </div><br/><br/>
+                    <DropdownButton as={ButtonGroup} title="Reports" id="bg-vertical-dropdown-2" >
+    <Dropdown.Item eventKey="1">Daily Status Report</Dropdown.Item>
+    <Dropdown.Item eventKey="2">Monthly Commission Report</Dropdown.Item>
+
+  </DropdownButton>
+  <br/><br/><br/><br/><br/>
                     <Bar
                               data={data3}
                               width={50}
