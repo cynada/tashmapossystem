@@ -5,7 +5,7 @@ import Footer from "./layout/footer/footer";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "sweetalert2/src/sweetalert2.scss";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import $ from "jquery";
 
@@ -28,14 +28,14 @@ import EditOrder from "./pages/admin/editorder";
 import ViewSales from "./pages/admin/viewsales";
 import AddUser from "./pages/admin/adduser";
 
+//reports
+import CommissionReport from "./pages/admin/reports/commissionreport";
+
 //user
 import AddOrder from "./pages/user/addproduct";
 import SearchOrder from "./pages/user/searchorder";
 import SingleOrder from "./pages/user/viewsingleorder";
 import SearchOrders from "./pages/user/searchorders";
-
-
-
 
 class App extends React.Component {
   constructor(props) {
@@ -55,21 +55,23 @@ class App extends React.Component {
       : `/${pathArray[1]}` === "/admin-addproducts"
       ? true
       : `/${pathArray[1]}` === "/admin-adduser"
-      ?true
+      ? true
       : `/${pathArray[1]}` === "/admin-vieworders"
       ? true
       : `/${pathArray[1]}` === "/admin-editorder"
       ? true
       : `/${pathArray[1]}` === "/admin-viewsales"
-      ?true
+      ? true
       : `/${pathArray[1]}` === "/user-searchorder"
       ? true
       : `/${pathArray[1]}` === "/user-vieworders"
       ? true
-      : `/${pathArray[1]}` === "/user-addorder" 
+      : `/${pathArray[1]}` === "/user-addorder"
       ? true
-      : `/${pathArray[1]}` === "/user-searchorders" 
-      ?true
+      : `/${pathArray[1]}` === "/user-searchorders"
+      ? true
+      : `/${pathArray[1]}` === "/admin-commissionreport"
+      ? true
       : false;
   }
   setHeader(pathname) {
@@ -91,33 +93,38 @@ class App extends React.Component {
     var token = sessionStorage.getItem("token");
     return (
       <Fragment>
-        {/*token != undefined &&*/ this.getUrl(location.pathname) ? (
-          <Switch>
-            <Route path="/maintenance" component={Maintenance} />
-            {/* Admin */}
-            <Route path="/admin-addproducts" component={AddProduct} />
-            {/* <Route path="/" component={Login} /> */}
-            <Route path="/admin-vieworders" component={ViewOrders} />
-            <Route path="/admin-editorder" component={EditOrder} />
-            <Route path="/admin-viewsales" component={ViewSales} />
+        {
+          /*token != undefined &&*/ this.getUrl(location.pathname) ? (
+            <Switch>
+              <Route path="/maintenance" component={Maintenance} />
+              {/* Admin */}
+              <Route path="/admin-addproducts" component={AddProduct} />
+              {/* <Route path="/" component={Login} /> */}
+              <Route path="/admin-vieworders" component={ViewOrders} />
+              <Route path="/admin-editorder" component={EditOrder} />
+              <Route path="/admin-viewsales" component={ViewSales} />
 
-            {/* AddUser */}
+              {/* AddUser */}
 
-            <Route path="/admin-adduser" component={AddUser} />
+              <Route path="/admin-adduser" component={AddUser} />
 
-            {/* USER */}
-            <Route path="/user-searchorder" component={SearchOrder} />
-            <Route path="/user-addorder" component={AddOrder} />
-            <Route path="/user-vieworders" component={SingleOrder} />
-            <Route path="/user-searchorders" component={SearchOrders} />
-            
-          </Switch>
-        ) : (
-          <div className="page-wrapper">
-            <Switch>{<Route path="/" component={Login} />}</Switch>
-            <Scrolltop />
-          </div>
-        )}
+              {/* Reports */}
+
+              <Route path="/admin-commissionreport" component={CommissionReport} />
+
+              {/* USER */}
+              <Route path="/user-searchorder" component={SearchOrder} />
+              <Route path="/user-addorder" component={AddOrder} />
+              <Route path="/user-vieworders" component={SingleOrder} />
+              <Route path="/user-searchorders" component={SearchOrders} />
+            </Switch>
+          ) : (
+            <div className="page-wrapper">
+              <Switch>{<Route path="/" component={Login} />}</Switch>
+              <Scrolltop />
+            </div>
+          )
+        }
       </Fragment>
     );
   }
