@@ -28,26 +28,28 @@ const menuItems = [
     label: "Manage Products",
     icon: "fas fa-battery-half",
     link: "/admin-addproducts",
-    items: [
-      { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-      { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-    ],
   },
   {
     id: 2,
+    label: "Manage Users",
+    icon: "fas fa-battery-half",
+    link: "/admin-adduser",
+  },
+  {
+    id: 3,
     label: "View Orders",
     icon: "fas fa-battery-half",
     link: "/admin-vieworders",
   },
   {
-    id: 3,
+    id: 4,
     label: "View Sales",
     icon: "fas fa-battery-half",
-    link: "/admin-viewsales"
+    link: "/admin-viewsales",
   },
   {
-    id: 4,
-    label: "Log Out",    
+    id: 5,
+    label: "Log Out",
     icon: "fas fa-battery-half",
     link: "/admin-login",
   },
@@ -260,17 +262,17 @@ class editorder extends Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Key</th>
-              <th>Value</th>
+              <th>Order Id</th>
+              <th>111232131</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Id</td>
+              <td>Customer Name</td>
               <td>{order._id}</td>
             </tr>
             <tr>
-              <td>User Id</td>
+              <td>Phone Number</td>
               <td>{order.user}</td>
             </tr>
             <tr>
@@ -278,49 +280,46 @@ class editorder extends Component {
               <td>{moment(order.createdAt).format("DD-MM-YYYY")}</td>
             </tr>
             <tr>
-              <td>Ordered Products</td>
+              <td>Description</td>
               <td>
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Net Price</th>
+                <th>Discount</th>
                 <th>Total Price</th>
+                <th>Work Done By</th>
                 {orderContent}
                 <tfoot>
                   <tr>
-                    <td>Tax</td>
                     <td colspan="2"></td>
-                    <td className="text-right">{order.taxPrice}</td>
                   </tr>
                   <tr>
-                    <td>Shipping Fee</td>
                     <td colspan="2"></td>
-                    <td className="text-right">{order.shippingPrice}</td>
                   </tr>
                   <tr>
                     <td>Total Amount</td>
-                    <td colspan="2"></td>
-                    <td className="text-right">{order.totalPrice}</td>
+                    <td colspan="3"></td>
+                    <td className="text-right">2200.00</td>
+                  </tr>
+                  <tr>
+                    <td>Order Created By</td>
+                    <td colspan="4"></td>
+                    <td className="text-right">EPF:222</td>
                   </tr>
                 </tfoot>
               </td>
             </tr>
             <tr>
-              <td>Shipping Address</td>
-              <td>
-                <th>Full Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Country</th>
-                <th>Postal Code</th>
-                <tr>
-                  <td>{contetntsShip.fullName}</td>
-                  <td>{contetntsShip.address}</td>
-                  <td>{contetntsShip.city}</td>
-                  <td>{contetntsShip.country}</td>
-                  <td>{contetntsShip.postalCode}</td>
-                </tr>
-              </td>
-              {/* {shipContent} */}
+              <td>Total Amount</td>
+              <td>{order.paymentMethod}</td>
+            </tr>
+            <tr>
+              <td>Advance</td>
+              <td>{order.paymentMethod}</td>
+            </tr>
+            <tr>
+              <td>Due Payment</td>
+              <td>{order.paymentMethod}</td>
             </tr>
             <tr>
               <td>Payment Method</td>
@@ -344,35 +343,6 @@ class editorder extends Component {
               <p>Paid</p>
               </td>
              
-            </tr>
-            <tr>
-            <td hidden={order.isPaid}>Payment Id</td>
-            <td hidden={order.isPaid}>
-              <input
-                    type="text"
-                    id="ispaidId"
-                    onChange={(e) => this.setState({paymentId:e.target.value})}
-                    value={this.state.paymentId}
-                  />
-              </td>
-              </tr>
-            <tr>
-              <td>Shipment</td>
-              <td hidden={order.isDelivered}>
-                <p>
-                  Mark as Shipped
-                  <input
-                    type="checkbox"
-                    id="inlineCheckbox1"
-                    onChange={(e) => this.isShipped(e)}
-                    value={order.isDelivered}
-                    checked={order.isDelivered}
-                  />
-                </p>
-              </td>
-              <td hidden={!order.isDelivered}>
-                <p>Shipped</p>
-              </td>
             </tr>
             {/* {tableContent} */}
           </tbody>
