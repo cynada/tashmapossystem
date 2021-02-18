@@ -22,7 +22,6 @@ router.get("/", async (req, res) => {
 });
 router.get("/:id", async (req, res) => {
   try {
-    console.log(req.params.id);
     var order;
     mysqlConnection.query(
       `CALL GetOrderbyId(${req.params.id});`,
@@ -42,6 +41,7 @@ router.get("/:id", async (req, res) => {
           CustomerId: results[0][0].CustomerId,
           CustomerName: results[0][0].CustomerName,
           PhoneNumber: results[0][0].PhoneNumber,
+          CreatedBy: results[0][0].CreatedBy,
           Items: [],
         };
       }
@@ -58,13 +58,13 @@ router.get("/:id", async (req, res) => {
           return {
             Id: item.Id,
             OrderId: item.OrderId,
-            Category: item.Category,
-            Name: item.Name,
+            CategoryName: item.CategoryName,
+            ProductName: item.ProductName,
             Description: item.Description,
             Qty: item.Qty,
             Price: item.Price,
             Discount: item.Discount,
-            WorkDoneBy: item.WorkDoneBy,
+            WorkDoneBy: item.WorkDoneByName,
             Commission: item.Commission,
             CreatedDate: item.CreatedDate,
             CreatedBy: item.CreatedBy,
@@ -73,7 +73,6 @@ router.get("/:id", async (req, res) => {
           };
         });
         order.Items = items;
-        console.log(order);
         res.send(order);
       }
     );
