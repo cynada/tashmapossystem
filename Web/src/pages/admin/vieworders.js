@@ -10,7 +10,6 @@ import { SideNav, Chevron, Icon } from "react-side-nav";
 import "../../../node_modules/react-side-nav/dist/themes.css";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 
-
 import moment from "moment";
 import {
   CommonGet,
@@ -45,21 +44,20 @@ class vieworders extends Component {
   constructor(props) {
     super(props);
 
-    this.onDrop = this.onDrop.bind(this);
+    
   }
 
   componentWillMount() {
-    // CommonGet("orders", "")
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     console.log("GG" + json);
-    //     this.setState({
-    //       orderList: json,
-    //     });
-    //   })
-    //   .then(() => {
-    //     this.jqueryScripts();
-    //   });
+    CommonGet("orders", "")
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({
+          orderList: json,
+        });
+      })
+      .then(() => {
+        this.jqueryScripts();
+      });
   }
 
   jqueryScripts = () => {
@@ -68,44 +66,9 @@ class vieworders extends Component {
     });
   };
 
-  onDrop(e) {
-    this.setState({
-      pictures: this.state.pictures.concat(e),
-    });
 
-    let file = e.target.files[0];
 
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = this.handleReaderLoader.bind(this);
-      reader.readAsBinaryString(file);
-    }
-  }
-
-  handleReaderLoader = (readerEvt) => {
-    let binaryString = readerEvt.target.result;
-    this.setState({
-      base64string: btoa(binaryString),
-    });
-  };
-
-  addProduct = () => {
-    console.log("PIC:" + JSON.stringify(this.state.pictures));
-
-    // 	let formdata ={
-
-    // 	      name: this.state.productName,
-    // 		  description: this.state.description,
-    // 		  price:this.state.price,
-    // 		  itemImage:this.state.pictures,
-    // 		  inStock: this.state.inStock,
-    // 		  category: this.state.categoryId,
-    // 		  isActive: true
-
-    // 	}
-    // alert(JSON.stringify(formdata));
-  };
+ 
 
   modalOpen = (id) => {
     sessionStorage.setItem("order",id);
@@ -125,175 +88,29 @@ class vieworders extends Component {
     //     });
     //   });
   };
-  closeModal = () => {
-    this.setState({
-      isModalOpen: false,
-    });
-  };
-
-  rendarModal() {
-    if (!this.state.isModalOpen) return;
-    let order = this.state.order;
-    let contetnts = order.orderItems;
-    let orderContent =
-      contetnts === undefined || contetnts === null
-        ? null
-        : contetnts.map((item) => {
-            return (
-              <tr key={item._id}>
-                <td>{item.name}</td>
-                <td>{item.qty}</td>
-                <td>{item.price}</td>
-                <td className="text-right">{item.price * item.qty}</td>
-              </tr>
-            );
-          });
-
-    //Progress
-    let shippingStatus = order.isDelivered ? "Yes" : "No";
-    let payStatus = order.isPaid ? "Yes" : "No";
-    return (
-      <div>
-        <div className="popup">
-          <div className="popup_inner">
-            <label>ORDER DETAILS</label>
-
-            {/* <div class="table-responsive" style={{ overflow: "hidden"},{paddingLeft : "20%"}}> */}
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Key</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Id</td>
-                  <td>{order._id}</td>
-                </tr>
-                <tr>
-                  <td>Date</td>
-                  <td>{moment(order.createdAt).format("DD-MM-YYYY")}</td>
-                </tr>
-                <tr>
-                  <td>Ordered Products</td>
-                  <td>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Net Price</th>
-                    <th>Total Price</th>
-                    {orderContent}
-                    <tfoot>
-                      <tr>
-                        <td>Tax</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.taxPrice}</td>
-                      </tr>
-                      <tr>
-                        <td>Shipping Fee</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.shippingPrice}</td>
-                      </tr>
-                      <tr>
-                        <td>Total Amount</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.totalPrice}</td>
-                      </tr>
-                    </tfoot>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Paid</td>
-                  <td>{payStatus}</td>
-                </tr>
-                <tr>
-                  <td>Shipped</td>
-                  <td>{shippingStatus}</td>
-                </tr>
-                {/* {tableContent} */}
-              </tbody>
-            </Table>
-            {/* </div> */}
-            {/* {this.renderPopUpValues} */}
-            {/* <div><h3  style={{ color: 'red' }}><b>Give Your Rating</b></h3><Rating initialRating={this.state.rate} onChange={(rate) => this.rateAdd(rate)}></Rating></div><br/><br/> */}
-            {/* <section class="site-hero"  id="section-homeModal" ></section> */}
-            <button
-              class="btn btn-default margin"
-              type="button"
-              onClick={this.printHandler}
-            >
-              <span class="fa fa-print"></span> &nbsp;Print
-            </button>
-            <br />
-            <br />
-            <div class="button_formbutton">
-              <button onClick={this.closeModal}>Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  selectAllReconciliationHandler = () => {
-    if (!this.state.isSelectAll) {
-      // var updatedList = this.state.reconsillationPopUpList.map((obj) => {
-
-      //     if (!obj.isActive) {
-      //         obj.isActive = !obj.isActive;
-      //         return obj;
-      //     }
-      //     else {
-      //         return obj;
-      //     }
-      // });
-      this.setState({
-        // reconsillationPopUpList: updatedList,
-        isSelectAll: true,
-      });
-    } else {
-      // var updatedList = this.state.reconsillationPopUpList.map((obj) => {
-
-      //     if (obj.isActive) {
-      //         obj.isActive = !obj.isActive;
-      //         return obj;
-      //     }
-      //     else {
-      //         return obj;
-      //     }
-      // });
-      this.setState({
-        // reconsillationPopUpList: updatedList,
-        isSelectAll: false,
-      });
-    }
-  };
-
   renderDisplay = (contetnts) => {
     let tableContent =
       contetnts === undefined || contetnts === null
         ? null
         : contetnts.map((item) => {
             //Progress
-            let shippingStatus = item.isDelivered ? "Yes" : "No";
-            let payStatus = item.isPaid ? "Yes" : "No";
+            let IsCompleted = item.IsCompleted == 1 ? "Yes" : "No";
             return (
-              <tr key={item._id}>
-                <td>{item._id}</td>
-                <td>{moment(item.createdAt).format("DD-MM-YYYY")}</td>
-                <td>{item.totalPrice}</td>
+              <tr key={item.OrderId}>
+                <td>{item.OrderId}</td>
+                <td>{moment(item.CreatedDate).format("DD-MM-YYYY")}</td>
+                <td>{item.OrderTotal}</td>
                 <td>
                   {" "}
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => this.modalOpen(item._id)}
+                    onClick={() => this.modalOpen(item.OrderId)}
                   >
                     View
                   </button>
                 </td>
-                <td>{payStatus}</td>
-                <td>{shippingStatus}</td>
+                <td>{IsCompleted}</td>
                 {/* <td>{item.isPaid}</td>
               <td>{item.isPaid}</td> */}
                 {/* <td><a title="Edit " onClick={(event) => this.formItemEditHandler(item._id)} ><i className="i class="i class="fa fa-list-alt fa-2x fore-color-cyan icon-blue"></i> </a></td>
@@ -312,8 +129,7 @@ class vieworders extends Component {
               <th>Order Date</th>
               <th>Total Price</th>
               <th>Order Details</th>
-              <th>Paid</th>
-              <th>Shipped</th>
+              <th>Completed</th>
               {/* <th>Completed</th>
               <th>
                 Select All{" "}
@@ -336,172 +152,9 @@ class vieworders extends Component {
     );
   };
 
-  stockChange = () => {
-    this.setState({
-      inStock: true,
-    });
-  };
-
-  categoryChange = (e) => {
-    this.setState({
-      category: e.target.value,
-    });
-  };
-
-  onDrop(e) {
-    let file = e.target.files[0];
-
-    const reader = new FileReader();
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        var Base64 = reader.result;
-        this.setState({
-          base64string: Base64,
-        });
-      };
-    }
-  }
-
-  handleReaderLoader = (readerEvt) => {
-    let binaryString = readerEvt.target.result;
-    this.setState({
-      base64string: btoa(binaryString),
-    });
-  };
-
-  renderPopUpValues = () => {
-    let order = this.state.order;
-    let contetnts = order.orderItems;
-    let orderContent =
-      contetnts === undefined
-        ? null
-        : contetnts.map((item) => {
-            return (
-              <tr key={item._id}>
-                <td>{item.name}</td>
-                <td>{item.qty}</td>
-                <td>{item.price}</td>
-                <td className="text-right">{item.price * item.qty}</td>
-              </tr>
-            );
-          });
-
-    //Progress
-    let shippingStatus = order.isDelivered ? "Yes" : "No";
-    let payStatus = order.isPaid ? "Yes" : "No";
-    return (
-      <div>
-        <div className="popup">
-          <div className="popup_inner">
-            <label>ORDER DETAILS</label>
-
-            {/* <div class="table-responsive" style={{ overflow: "hidden"},{paddingLeft : "20%"}}> */}
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Key</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Id</td>
-                  <td>{order._id}</td>
-                </tr>
-                <tr>
-                  <td>Date</td>
-                  <td>{moment(order.createdAt).format("DD-MM-YYYY")}</td>
-                </tr>
-                <tr>
-                  <td>Ordered Products</td>
-                  <td>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Net Price</th>
-                    <th>Total Price</th>
-                    {orderContent}
-                    <tfoot>
-                      <tr>
-                        <td>Tax</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.taxPrice}</td>
-                      </tr>
-                      <tr>
-                        <td>Shipping Fee</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.shippingPrice}</td>
-                      </tr>
-                      <tr>
-                        <td>Total Amount</td>
-                        <td colspan="2"></td>
-                        <td className="text-right">{order.totalPrice}</td>
-                      </tr>
-                    </tfoot>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Paid</td>
-                  <td>{payStatus}</td>
-                </tr>
-                <tr>
-                  <td>Shipped</td>
-                  <td>{shippingStatus}</td>
-                </tr>
-                {/* {tableContent} */}
-              </tbody>
-            </Table>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  printHandler = (event) => {
-    var mywindow = window.open("", "PRINT", "height=600,width=1000");
-    mywindow.document.write("<html> <body>");
-    mywindow.document.write(
-      '<link rel="stylesheet" href="../../../../../../bootstrap.min.css" type="text/css" />'
-    );
-    mywindow.document.write(
-      ' <center>  <img src="../../../../../../dfcc-logo.png"/> <h3><strong>Order Details<hr/></strong></h3>  </center>'
-    );
-    mywindow.document.write('<div class-"container" id="width">');
-
-    mywindow.document.write('<div class-"row">');
-    mywindow.document.write('<div class-"col-4">');
-    mywindow.document.write(
-      "Date: <strong>" +
-        moment(this.state.toDate).format("YYYY-MM-DD") +
-        "</strong>"
-    );
-    mywindow.document.write("</div>");
-    mywindow.document.write(
-      '<div class-"col-4" style="margin-left:90mm;margin-top:-6mm;">'
-    );
-    mywindow.document.write("</div>");
-    mywindow.document.write('<div class="clearfix"></div>');
-    mywindow.document.write('<div class-"col-4">');
-    mywindow.document.write("<br/><br/></div>");
-    mywindow.document.write("</div>");
-    mywindow.document.write("</div>");
-    mywindow.document.write(document.getElementById("printContent").innerHTML);
-    mywindow.document.write("<br/><br/></div>");
-    // mywindow.document.write(document.getElementById("printContentsTotalValues").innerHTML);
-    mywindow.document.write("</body ></html>");
-    setTimeout(function () {
-      mywindow.document.close(); // necessary for IE >= 10
-      mywindow.focus(); // necessary for IE >= 10*/
-
-      mywindow.print();
-      //mywindow.close();
-    }, 3000);
-  };
+  
 
   render() {
-    let imageURL = this.state.base64string;
-    let printContents = this.renderPopUpValues();
-
     let contetntsDisplay = this.renderDisplay(this.state.orderList);
 
     const myStyle = {
@@ -552,32 +205,9 @@ class vieworders extends Component {
                 </div>
                 <div>{contetntsDisplay}</div>
 
-                <div> {this.rendarModal()}</div>
-                <div id="printContent" hidden>
-                  {printContents}
-                </div>
+              
 
-                <div className="row">
-                  <div className="col-md-3">
-                    {/* <button
-                        type="button"
-                        className="btn btn-primary"
-                       // onClick={this.editProduct}
-                      >
-                       SUBMIT
-                      </button>
-                      
-                    </div>
-                    <div className="col-md-3" >
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        //onClick={this.resetHandler}
-                      >
-                        EDIT ORDER
-                      </button> */}
-                  </div>
-                </div>
+              
               </div>
             </section>
           </div>

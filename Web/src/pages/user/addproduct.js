@@ -114,6 +114,17 @@ class AddProduct extends Component {
       .then(() => {
         this.jqueryScripts();
       });
+    CommonGet("paymentmethods", "")
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("GG" + json);
+        this.setState({
+          paymentmethods: json,
+        });
+      })
+      .then(() => {
+        this.jqueryScripts();
+      });
   }
 
   componentDidMount() {
@@ -217,12 +228,19 @@ class AddProduct extends Component {
       filteredProductList: filteredList,
     });
   };
-
   productChange = (e) => {
     let index = e.nativeEvent.target.selectedIndex;
     this.setState({
       productId: e.target.value,
       productName: e.nativeEvent.target[index].text,
+    });
+  };
+
+  paymentMethodChange = (e) => {
+    let index = e.nativeEvent.target.selectedIndex;
+    this.setState({
+      paymentMethodId: e.target.value,
+      paymentMethodName: e.nativeEvent.target[index].text,
     });
   };
 
@@ -409,6 +427,8 @@ class AddProduct extends Component {
       price: "",
       workDoneBy: "",
       discount: "",
+      productId: -1,
+      categoryId: -1
     });
   };
 
@@ -429,6 +449,7 @@ class AddProduct extends Component {
       IsCompleted: false,
       CompletedDate: null,
       UserId: 1,
+      PaymentMethodId: this.state.paymentMethodId,
       Advance: this.state.advance,
       AmountDue: this.state.totalAmoutDue,
       TotalAmount: this.state.totalPrice,
@@ -546,12 +567,38 @@ class AddProduct extends Component {
       </select>
     );
   };
+
+  renderPaymentMethodDrop = (prod) => {
+    let optionItems =
+      prod == null || prod == undefined
+        ? null
+        : prod.map((item) => (
+            <option key={item.Id} value={item.Id}>
+              {item.Name}
+            </option>
+          ));
+
+    return (
+      <select
+        value={this.state.productId}
+        className="form-control"
+        onChange={(e) => this.paymentMethodChange(e)}
+      >
+        <option key="-1" value="-1">
+          Please select a payment method
+        </option>
+        {optionItems}
+      </select>
+    );
+  };
+
   render() {
     let imageURL = this.state.base64string;
     let table = this.renderDisplayTable(this.state.itemList);
     let printContent = this.renderPrintValues(this.state.itemList);
     let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     let productdrop = this.renderProductDrop(this.state.filteredProductList);
+    let paymentmethoddrop = this.renderPaymentMethodDrop(this.state.paymentmethods);
 
     // categoryDropDown = this.categoryDropDownList()
     return (
@@ -852,6 +899,16 @@ class AddProduct extends Component {
                       </div>
                       {/* TABLE GRID ENDS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
                       <hr />
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>
+                              <strong>Payment Method</strong>
+                            </label>
+                            {paymentmethoddrop}
+                          </div>
+                        </div>
+                      </div>
                       <div className="row">
                         <div className="col-md-3">
                           <div className="form-group">
