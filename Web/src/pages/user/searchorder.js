@@ -13,16 +13,14 @@ import {
   CommonGetById,
 } from "../../config";
 import { SideNav, Chevron, Icon } from "react-side-nav";
-
 import "../../../node_modules/react-side-nav/dist/themes.css";
 import $ from "jquery";
 import DataTable from "datatables";
 import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 import moment from "moment";
-
-// import "../../assets/css/bootstrap.min.css"
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const menuItems = [
   {
@@ -65,8 +63,10 @@ class SearchOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-    orderCategory:"",
-    orderNumber:"",
+      orderCategory: "",
+      orderNumber: "",
+      startDate: new Date(),
+      endDate: new Date(),
     };
   }
 
@@ -76,36 +76,21 @@ class SearchOrder extends Component {
     });
   };
 
-  componentWillMount() {
-  
-  }
+  componentWillMount() {}
 
   componentDidMount() {
     // this.jqueryScripts();
-
   }
 
-  componentDidUpdate() {
- 
-  }
+  componentDidUpdate() {}
 
-  editProduct = () => {
-    
-  };
+  editProduct = () => {};
 
-  addProduct = () => {
-   
-  };
+  addProduct = () => {};
 
-  commissionTypeChange = (e) => {
-  
-  };
+  commissionTypeChange = (e) => {};
 
-  selectHandler = () => {
-    
-   
-  };
-
+  selectHandler = () => {};
 
   //delete a product
   formItemDeleteHandler(id) {
@@ -183,7 +168,7 @@ class SearchOrder extends Component {
         ? null
         : contetnts.map((item) => {
             return (
-                <tr key={item._id}>
+              <tr key={item._id}>
                 <td>{item._id}</td>
                 <td>{moment(item.createdAt).format("DD-MM-YYYY")}</td>
                 <td>{item.totalPrice}</td>
@@ -209,18 +194,17 @@ class SearchOrder extends Component {
         <Table striped bordered hover id="example">
           <thead>
             <tr>
+              <th>Customer Name</th>
+              <th>Phone Num</th>
               <th>Order Id</th>
               <th>Order Date</th>
               <th>Total Price</th>
               <th>Order Details</th>
+              <th>Completed</th>
               <th>Paid</th>
-              <th>Shipped</th>
             </tr>
           </thead>
-          <tbody>
-            {/* {tableContent} */}
-  
-          </tbody>
+          <tbody>{/* {tableContent} */}</tbody>
         </Table>
       </div>
     );
@@ -239,7 +223,6 @@ class SearchOrder extends Component {
       price: 0,
       workDoneBy: "",
       discount: 0,
-    
     });
   };
 
@@ -261,7 +244,7 @@ class SearchOrder extends Component {
     // mywindow.document.write(
     // '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />'   );
     mywindow.document.write(
-      ' <center> <h3><strong>TASHMA PHOTO STUDIO & DIGITAL LAB<hr/></strong></h3>  </center>'
+      " <center> <h3><strong>TASHMA PHOTO STUDIO & DIGITAL LAB<hr/></strong></h3>  </center>"
     );
     // mywindow.document.write('<div class-"container" id="width">');
 
@@ -272,18 +255,11 @@ class SearchOrder extends Component {
         moment(this.state.toDate).format("YYYY-MM-DD") +
         "</strong><br/>"
     );
-    mywindow.document.write(
-      "OrderNo:423422 <br/>"
-    );
-    mywindow.document.write(
-     "Issued By:Ranil"
-    );
+    mywindow.document.write("OrderNo:423422 <br/>");
+    mywindow.document.write("Issued By:Ranil");
     mywindow.document.write("<br/><br/><br/><div>");
-    mywindow.document.write(
-      '<div style="margin-left:90mm;margin-top:-6mm;">'
-    
-    );
-        mywindow.document.write(document.getElementById("printContent").innerHTML);
+    mywindow.document.write('<div style="margin-left:90mm;margin-top:-6mm;">');
+    mywindow.document.write(document.getElementById("printContent").innerHTML);
     mywindow.document.write("<br/><br/></div>");
 
     // mywindow.document.write("</div>");
@@ -302,7 +278,7 @@ class SearchOrder extends Component {
 
       mywindow.print();
       //mywindow.close();
-    },3000);
+    }, 3000);
   };
 
   render() {
@@ -350,96 +326,43 @@ class SearchOrder extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12">
-                    <form id="contact-form">
-                      <div className="messages" />
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="form-group">
-                            <label>
-                              <strong>Order By</strong>
-                            </label>
-                            <select
-                              className="form-control"
-                              value={this.state.orderCategory}
-                              onChange={(e) =>
-                                this.setState({ orderCategory: e.target.value })
-                              }
-                            >
-                              <option value="-1">-Order By-</option>{" "}
-                              <option value="orderNumber">Order number</option>
-                              <option value="phonenumber">Phone Number</option>
-                            </select>
-                          </div>
-                        </div>
-                        </div>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="form-group">
-                            <input
-                              id="form_email"
-                              type="text"
-                              name="email"
-                              className="form-control"
-                              placeholder="Order Number"
-                              required="required"
-                              value={this.state.orderNumber}
-                              onChange={(e) =>
-                                this.setState({ orderNumber: e.target.value })
-                              }
-                              data-error="Price is required."
-                            />
-                            <div className="help-block with-errors" />
-                          </div>
-                        </div>
-                      </div>
-                 
-                      <br /> <br />
-                      <div className="row">
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={this.editProduct}
-                          >
-                            UPDATE ITEM
-                          </button>
-                        </div>
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={this.resetHandler}
-                          >
-                            RESET
-                          </button>
-                        </div>
-                        <div
-                          className="col-md-3
-                        "
-                        >
-                          <button 
-                            type="button"
-                            className="btn btn-primary"
-                            hidden={this.state.isDisable}
-                            onClick={this.addProduct}
-                          >
-                            SEARCH ITEM
-                          </button>
-                        </div>
-                      </div>
-                      <br />
-                      <br />
-                      <hr />
-                      {/* TABLE GRID STARTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                      <div>{table}</div>
-                      <div id="printContent" hidden>
-                        {printContent}
-                      </div>
-                      {/* TABLE GRID ENDS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                      <hr />
-                     
-                    </form>
+                  <div className="col-md-12">
+                    <div className="col-md-3">
+                      <label>From Date</label>
+                      <DatePicker
+                        selected={this.state.startDate}
+                        onChange={(date) => this.setState({ startDate: date })}
+                      />
+                    </div>
+                    <br />
+                    <div className="col-md-3">
+                      <label>To Date</label>
+                      <DatePicker
+                        selected={this.state.endDate}
+                        onChange={(date) => this.setState({ endDate: date })}
+                      />
+                    </div>
+                    <br />
+                    <br />
+                    <div className="col-md-3">
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        hidden={this.state.isDisable}
+                        onClick={this.addProduct}
+                      >
+                        SEARCH ITEM
+                      </button>
+                    </div>
+
+                    <hr />
+                    {/* TABLE GRID STARTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+                    <div>{table}</div>
+                    <div id="printContent" hidden>
+                      {printContent}
+                    </div>
+                    {/* TABLE GRID ENDS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+                    <hr />
                   </div>
                 </div>
               </div>

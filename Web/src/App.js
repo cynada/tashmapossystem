@@ -36,6 +36,8 @@ import AddOrder from "./pages/user/addproduct";
 import SearchOrder from "./pages/user/searchorder";
 import SingleOrder from "./pages/user/viewsingleorder";
 import SearchOrders from "./pages/user/searchorders";
+import ResetPassword from "./pages/user/resetpassword";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -71,6 +73,8 @@ class App extends React.Component {
       : `/${pathArray[1]}` === "/user-searchorders"
       ? true
       : `/${pathArray[1]}` === "/admin-commissionreport"
+      ? true
+      : `/${pathArray[1]}` === "/user-resetpassword"
       ? true
       : false;
   }
@@ -117,6 +121,8 @@ class App extends React.Component {
               <Route path="/user-addorder" component={AddOrder} />
               <Route path="/user-vieworders" component={SingleOrder} />
               <Route path="/user-searchorders" component={SearchOrders} />
+              <Route path="/user-resetpassword" component={ResetPassword} />
+              
             </Switch>
           ) : (
             <div className="page-wrapper">

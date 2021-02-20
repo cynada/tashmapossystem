@@ -391,7 +391,7 @@ class AddUser extends Component {
                     <i className="la la-bold ic-3x rotation" />
                   </span> */}
                       <h2 className="mt-4">
-                        <strong>MANAGE USER</strong>
+                        <strong>RESET PASSWORD</strong>
                       </h2>
                       <p className="lead mb-0 ">Tashma Studio & Digital Lab</p>{" "}
                       <p className="lead mb-0 ic-2x rotation 90">📸
@@ -404,6 +404,8 @@ class AddUser extends Component {
                     <form id="contact-form">
                       <div className="messages" />
                       <div className="row">
+                      <div className="col-md-3">
+                          </div>
                         <div className="col-md-6">
                           <div className="form-group">
                             <input
@@ -411,7 +413,7 @@ class AddUser extends Component {
                               type="text"
                               name="name"
                               className="form-control"
-                              placeholder="Full Name"
+                              placeholder="EPFXXXX"
                               required="required"
                               value={this.state.fullName}
                               onChange={(e) =>
@@ -422,96 +424,20 @@ class AddUser extends Component {
                             <div className="help-block with-errors" />
                           </div>
                         </div>
-                        <div className="col-md-6">
-                          <div className="form-group">
-                            <input
-                              id="productName"
-                              type="text"
-                              name="surname"
-                              className="form-control"
-                              placeholder="NIC"
-                              required="required"
-                              value={this.state.nic}
-                              onChange={(e) =>
-                                this.setState({ nic: e.target.value })
-                              }
-                              data-error="Lastname is required."
-                            />
-                            <div className="help-block with-errors" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                      <div className="col-md-6">
-                          <div className="form-group">
-                            <input
-                              id="form_email"
-                              type="text"
-                              name="EPF"
-                              className="form-control"
-                              placeholder="EPF No"
-                              required="required"
-                              value={this.state.epf}
-                              onChange={(e) =>
-                                this.setState({ epf: e.target.value })
-                              }
-                              data-error="Valid email is required."
-                            />
-                            <div className="help-block with-errors" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="form-group">
-                            <textarea
-                              id="form_experience"
-                              name="Experience If any"
-                              className="form-control"
-                              value={this.state.description}
-                              onChange={(e) =>
-                                this.setState({ description: e.target.value })
-                              }
-                              placeholder="Description"
-                              rows={4}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <br /> <br />
-                      <div className="row">
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={this.editProduct}
-                          >
-                            UPDATE USER
-                          </button>
-                        </div>
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={this.resetHandler}
-                          >
-                            RESET
-                          </button>
-                        </div>
-                        <div className="col-md-12 text-center">
+                        <div className="col-md-3">
                           <button
                             type="button"
                             className="btn btn-primary"
                             hidden={this.state.isDisable}
                             onClick={this.addProduct}
                           >
-                            ADD USER
+                            RESET USER
                           </button>
-                        </div>
+                            </div>
                       </div>
+                        
                       <br />
                       <br />
-                      <div>{table}</div>
                     </form>
                   </div>
                 </div>
