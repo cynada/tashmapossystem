@@ -34,6 +34,7 @@ router.get("/:id", async (req, res) => {
         order = {
           OrderId: results[0][0].OrderId,
           OrderTotal: results[0][0].OrderTotal,
+          PaymentMethodName: results[0][0].PaymentMethodName,
           AdvancePayment: results[0][0].AdvancePayment,
           AmountDue: results[0][0].AmountDue,
           IsCompleted: results[0][0].IsCompleted,
@@ -110,6 +111,7 @@ router.post("/", async (req, res) => {
               }
               var CustomerId = results[0].customerId;
               var OrderTotal = parseFloat(req.body.TotalAmount);
+              var PaymentMethodId = parseFloat(req.body.PaymentMethodId);
               var AdvancePayment = parseFloat(req.body.Advance);
               var AmountDue = parseFloat(req.body.AmountDue);
               var IsCompleted = JSON.parse(req.body.IsCompleted);
@@ -117,7 +119,7 @@ router.post("/", async (req, res) => {
 
               console.log(OrderTotal);
               mysqlConnection.query(
-                `CALL InsertOrderDetails(${CustomerId}, ${OrderTotal}, ${AdvancePayment}, ${AmountDue}, ${IsCompleted}, ${CompletedDate}, ${User}, @orderId);`,
+                `CALL InsertOrderDetails(${CustomerId}, ${OrderTotal}, ${PaymentMethodId},${AdvancePayment}, ${AmountDue}, ${IsCompleted}, ${CompletedDate}, ${User}, @orderId);`,
                 (error, results, fields) => {
                   if (error) {
                     return mysqlConnection.rollback(() => {
@@ -133,7 +135,6 @@ router.post("/", async (req, res) => {
                         });
                       }
                       var OrderId = results[0].orderId;
-                      console.log(req.body.Orders);
                       req.body.Orders.map((item) => {
                         mysqlConnection.query(
                           `CALL InsertOrderDetailsItem(${OrderId}, ${item.CategoryId}, ${item.ProductId}, '${item.Description}', ${item.Qty}, ${item.Price}, ${item.Discount}, ${item.WorkDoneBy}, ${item.Commission}, ${User});`,

@@ -110,6 +110,17 @@ class AddProduct extends Component {
       .then(() => {
         this.jqueryScripts();
       });
+    CommonGet("paymentmethods", "")
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("GG" + json);
+        this.setState({
+          paymentmethods: json,
+        });
+      })
+      .then(() => {
+        this.jqueryScripts();
+      });
   }
 
   componentDidMount() {
@@ -187,7 +198,7 @@ class AddProduct extends Component {
       Discount: this.state.discount,
       CategoryName: this.state.categoryName,
       CategoryId: this.state.categoryId,
-      WorkDoneBy: 1,  
+      WorkDoneBy: 1,
       Commission: this.state.commission,
       commissionType: this.state.commissionType,
     };
@@ -235,22 +246,30 @@ class AddProduct extends Component {
   };
 
   categoryChange = (e) => {
-
-    let filteredList = this.state.productList.filter(c => c.CategoryId == e.target.value)
+    let filteredList = this.state.productList.filter(
+      (c) => c.CategoryId == e.target.value
+    );
     let index = e.nativeEvent.target.selectedIndex;
     console.log(filteredList);
     this.setState({
       categoryId: e.target.value,
       categoryName: e.nativeEvent.target[index].text,
-      filteredProductList: filteredList
+      filteredProductList: filteredList,
     });
   };
-
   productChange = (e) => {
     let index = e.nativeEvent.target.selectedIndex;
     this.setState({
       productId: e.target.value,
       productName: e.nativeEvent.target[index].text,
+    });
+  };
+
+  paymentMethodChange = (e) => {
+    let index = e.nativeEvent.target.selectedIndex;
+    this.setState({
+      paymentMethodId: e.target.value,
+      paymentMethodName: e.nativeEvent.target[index].text,
     });
   };
 
@@ -440,6 +459,8 @@ class AddProduct extends Component {
       price: "",
       workDoneBy: "",
       discount: "",
+      productId: -1,
+      categoryId: -1
     });
   };
 
@@ -456,27 +477,27 @@ class AddProduct extends Component {
       CustomerName: this.state.customerName,
       PhoneNumber: this.state.phoneNumber,
       Orders: this.state.itemList,
-      IsCompleted:false,
-      CompletedDate:null,
-      UserId:1,
+      IsCompleted: false,
+      CompletedDate: null,
+      UserId: 1,
+      PaymentMethodId: this.state.paymentMethodId,
       Advance: this.state.advance,
       AmountDue: this.state.totalAmoutDue,
       TotalAmount: this.state.totalPrice,
     };
     console.log(formdata);
     CommonPost("orders", formdata)
-    .then((res) => res.json())
-    .then((json) => {
-      console.log(json);
-      Swal.fire({
-        position: "bottom",
-        //icon: 'success',
-        title: `${json.message}`,
-        showConfirmButton: false,
-        timer: 1500,
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        Swal.fire({
+          position: "bottom",
+          //icon: 'success',
+          title: `${json.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
-    })
-    console.log(formdata);
     this.printHandler();
   };
 
@@ -554,7 +575,7 @@ class AddProduct extends Component {
 
   renderProductDrop = (prod) => {
     let optionItems =
-    prod == null || prod == undefined
+      prod == null || prod == undefined
         ? null
         : prod.map((item) => (
             <option key={item.Id} value={item.Id}>
@@ -575,12 +596,38 @@ class AddProduct extends Component {
       </select>
     );
   };
+
+  renderPaymentMethodDrop = (prod) => {
+    let optionItems =
+      prod == null || prod == undefined
+        ? null
+        : prod.map((item) => (
+            <option key={item.Id} value={item.Id}>
+              {item.Name}
+            </option>
+          ));
+
+    return (
+      <select
+        value={this.state.productId}
+        className="form-control"
+        onChange={(e) => this.paymentMethodChange(e)}
+      >
+        <option key="-1" value="-1">
+          Please select a payment method
+        </option>
+        {optionItems}
+      </select>
+    );
+  };
+
   render() {
     let imageURL = this.state.base64string;
     let table = this.renderDisplayTable(this.state.itemList);
     let printContent = this.renderPrintValues(this.state.itemList);
     let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     let productdrop = this.renderProductDrop(this.state.filteredProductList);
+    let paymentmethoddrop = this.renderPaymentMethodDrop(this.state.paymentmethods);
 
     // categoryDropDown = this.categoryDropDownList()
     return (
@@ -680,7 +727,7 @@ class AddProduct extends Component {
                               <strong>Name</strong>
                             </label>
 
-                           {productdrop}
+                            {productdrop}
                           </div>
                         </div>
                       </div>
@@ -788,10 +835,8 @@ class AddProduct extends Component {
                               }
                             >
                               <option value="-1">Work Done By</option>{" "}
-                              <option value="Ford">Ranil : EPF100</option>
-                              <option value="Volvo">Manori : EPF101</option>
-                              <option value="Fiat">Devja : EPF102</option>
-                              <option value="Fiat">Kenuja : EPF103</option>
+                              <option value="Ford">Dulan : EPF100</option>
+                              <option value="Volvo">Iman : EPF101</option>
                             </select>
                           </div>
                         </div>
@@ -881,6 +926,16 @@ class AddProduct extends Component {
                       </div>
                       {/* TABLE GRID ENDS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
                       <hr />
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>
+                              <strong>Payment Method</strong>
+                            </label>
+                            {paymentmethoddrop}
+                          </div>
+                        </div>
+                      </div>
                       <div className="row">
                         <div className="col-md-3">
                           <div className="form-group">

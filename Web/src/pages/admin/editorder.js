@@ -101,14 +101,28 @@ class editorder extends Component {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.value) {
-        let orders = this.state.order;
-        this.setState((prevState) => ({
-          order: {
-            // object that we want to update
-            ...prevState.order, // keep all other key-value pairs
-            isPaid: !prevState.order.isPaid, // update the value of specific key
-          },
-        }));
+        let formdata = {
+          OrderId: this.state.orderId,
+        };
+        CommonPost("orders/complete", formdata)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            Swal.fire({
+              position: "bottom",
+              //icon: 'success',
+              title: `${json.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.setState((prevState) => ({
+              order: {
+                // object that we want to update
+                ...prevState.order, // keep all other key-value pairs
+                IsCompleted: !prevState.order.IsCompleted, // update the value of specific key
+              },
+            }));
+          });
       }
     });
   };
@@ -128,7 +142,9 @@ class editorder extends Component {
                 <td>{item.Qty}</td>
                 <td>{item.Price}</td>
                 <td className="text-right">{item.Discount}</td>
-                <td className="text-right">{(item.Price * item.Qty)-item.Discount}</td>
+                <td className="text-right">
+                  {item.Price * item.Qty - item.Discount}
+                </td>
                 <td className="text-right">{item.WorkDoneBy}</td>
               </tr>
             );
@@ -193,23 +209,23 @@ class editorder extends Component {
             </tr>
             <tr>
               <td>Payment Method</td>
-              <td>{order.paymentMethod}</td>
+              <td>{order.PaymentMethodName}</td>
             </tr>
             <tr>
               <td>Payment</td>
-              <td hidden={order.isPaid}>
+              <td hidden={order.IsCompleted}>
                 <p>
                   Mark as Paid
                   <input
                     type="checkbox"
                     id="ispaid"
                     onChange={(e) => this.isPaid(e)}
-                    value={order.isPaid}
-                    checked={order.isPaid}
+                    value={order.IsCompleted}
+                    checked={order.IsCompleted}
                   />
                 </p>
               </td>
-              <td hidden={!order.isPaid}>
+              <td hidden={!order.IsCompleted}>
                 <p>Paid</p>
               </td>
             </tr>
