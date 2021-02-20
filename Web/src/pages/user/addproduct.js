@@ -78,6 +78,10 @@ class AddProduct extends Component {
       customerName: "",
       phoneNumber: "",
       id: 0,
+      isDone: false,
+      isEdit: false,
+      loginUser:"",
+      orderNumber:""
     };
   }
 
@@ -114,59 +118,27 @@ class AddProduct extends Component {
 
   componentDidMount() {
     // this.jqueryScripts();
-    $("#example").DataTable().destroy();
+    // $("#example").DataTable().destroy();
 
     window.scrollTo(0, 0);
   }
 
   componentDidUpdate() {
-    CommonGet("products", "")
-      .then((res) => res.json())
-      .then((json) => {
-        this.setState({
-          productList: json,
-        });
-      })
-      .then(() => {
-        this.jqueryScripts();
-      });
+    // CommonGet("products", "")
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     this.setState({
+    //       productList: json,
+    //     });
+    //   })
+    //   .then(() => {
+
+       // this.jqueryScripts();
+      // });
   }
 
-  editProduct = () => {
-    let id = this.state.editProductId;
-    let formdata = {
-      name: this.state.productName,
-      description: this.state.description,
-      price: this.state.price,
-      image: this.state.base64string,
-      brand: this.state.brand,
-      countInStock: this.state.instock,
-      category: this.state.category,
-    };
 
-    CommonUpdateById("products", id, formdata)
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        Swal.fire({
-          position: "bottom",
-          //icon: 'success',
-          title: `${json.message}`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .then(() => {
-        CommonGet("products", "")
-          .then((res) => res.json())
-          .then((json) => {
-            console.log("GG" + json);
-            this.setState({
-              productList: json,
-            });
-          });
-      });
-  };
+
 
   addProduct = () => {
     var itemTotal = this.state.price * this.state.qty;
@@ -187,7 +159,7 @@ class AddProduct extends Component {
       Discount: this.state.discount,
       CategoryName: this.state.categoryName,
       CategoryId: this.state.categoryId,
-      WorkDoneBy: 1,  
+      WorkDoneBy: this.state.workDoneBy,
       Commission: this.state.commission,
       commissionType: this.state.commissionType,
     };
@@ -199,10 +171,9 @@ class AddProduct extends Component {
       totalPrice: totalPriceAddition,
       totalAmoutDue: totalPriceAddition,
       id: this.state.id + 1,
+      isEdit: false,
     });
-    $("#example").DataTable().destroy();
 
-    this.jqueryScripts();
     this.resetHandler();
   };
 
@@ -235,14 +206,15 @@ class AddProduct extends Component {
   };
 
   categoryChange = (e) => {
-
-    let filteredList = this.state.productList.filter(c => c.CategoryId == e.target.value)
+    let filteredList = this.state.productList.filter(
+      (c) => c.CategoryId == e.target.value
+    );
     let index = e.nativeEvent.target.selectedIndex;
     console.log(filteredList);
     this.setState({
       categoryId: e.target.value,
       categoryName: e.nativeEvent.target[index].text,
-      filteredProductList: filteredList
+      filteredProductList: filteredList,
     });
   };
 
@@ -256,21 +228,22 @@ class AddProduct extends Component {
 
   selectHandler = (id) => {
     let itemFromPriceList = this.state.itemList;
-
     var item = itemFromPriceList.filter((item) => item.id == id);
+    var itemL = itemFromPriceList.filter((item) => item.id != id);
     var itemFirst = item[0];
-    console.log(item);
 
     this.setState({
       commissionType: itemFirst.commissionType,
-      commission: itemFirst.commission,
-      qty: itemFirst.qty,
-      description: itemFirst.description,
-      itemcategory: itemFirst.itemcategory,
-      itemName: itemFirst.itemName,
-      price: itemFirst.price,
-      workDoneBy: itemFirst.workDoneBy,
-      discount: itemFirst.discount,
+      commission: itemFirst.Commission,
+      qty: itemFirst.Qty,
+      description: itemFirst.Description,
+      categoryId: itemFirst.CategoryId,
+      productId: itemFirst.ProductId,
+      price: itemFirst.Price,
+      workDoneBy: itemFirst.WorkDoneBy,
+      discount: itemFirst.Discount,
+      isEdit: true,
+      itemList: itemL,
     });
   };
 
@@ -285,15 +258,9 @@ class AddProduct extends Component {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.value) {
-        CommonDeleteById("products", id)
-          .then((res) => res.json())
-          .then((json) => {
-            window.location.reload();
-            console.log("Deleted" + json);
-          })
-          .then(() => {
-            Swal.fire("Deleted!", "", "success");
-          });
+        this.setState({
+          itemList: this.state.itemList.filter((item) => item.id != id),
+        });
       }
     });
   }
@@ -303,17 +270,17 @@ class AddProduct extends Component {
       contetnts === undefined
         ? null
         : contetnts.map((item) => {
-            let itemTotal = item.price * item.qty;
-            let itemDiscount = (itemTotal * item.discount) / 100;
+            let itemTotal = item.Price * item.Qty;
+            let itemDiscount = (itemTotal * item.Discount) / 100;
 
             return (
               <tr key={item.id}>
-                <td>{item.itemName}</td>
-                <td>{item.description}</td>
-                <td>{item.price}</td>
-                <td>{item.qty}</td>
-                <td>{item.discount}%</td>
-                <td>{itemTotal - itemDiscount}</td>
+                <td>{item.ProductName}</td>
+                <td>{item.Description}</td>
+                <td>{item.Price}</td>
+                <td>{item.Qty}</td>
+                <td>{item.Discount}%</td>
+                <td style={{textAlign:'end'}}>{itemTotal - itemDiscount}</td>
               </tr>
             );
           });
@@ -337,21 +304,23 @@ class AddProduct extends Component {
             </tr>
           </thead>
           <tbody>{tableContent}</tbody>
+          <br/><br/>
           <tfoot>
+            
             <tr>
               <td colSpan="4"></td>
-              <td>Total Price : </td>
-              <td>{this.state.totalPrice}</td>
+              <td><strong>Total Price : </strong></td>
+              <td style={{textAlign:'end'}}>{this.state.totalPrice}</td>
             </tr>
             <tr>
               <td colSpan="4"></td>
-              <td>Advance : </td>
-              <td>{this.state.advance}</td>
-            </tr>{" "}
+              <td><strong>Advance : </strong></td>
+              <td style={{textAlign:'end'}}>{this.state.advance}</td>
+            </tr>
             <tr>
               <td colSpan="4"></td>
-              <td>Amount Due : </td>
-              <td>{this.state.totalAmoutDue}</td>
+              <td><strong>Amount Due : </strong></td>
+              <td style={{textAlign:'end'}}>{this.state.totalAmoutDue}</td>
             </tr>
           </tfoot>
         </table>
@@ -393,7 +362,7 @@ class AddProduct extends Component {
                 <td>
                   <a
                     title="Delete "
-                    onClick={() => this.formItemDeleteHandler(item._id)}
+                    onClick={() => this.formItemDeleteHandler(item.id)}
                   >
                     <i className="fa fa-trash fa-2x fore-color-cyan icon-blue"></i>{" "}
                   </a>
@@ -452,30 +421,32 @@ class AddProduct extends Component {
   };
 
   searchAndPrint = () => {
+    let isdone = (this.state.totalAmoutDue = 0 ? true : false);
     let formdata = {
       CustomerName: this.state.customerName,
       PhoneNumber: this.state.phoneNumber,
       Orders: this.state.itemList,
-      IsCompleted:false,
-      CompletedDate:null,
-      UserId:1,
+      IsCompleted: false,
+      CompletedDate: null,
+      UserId: 1,
       Advance: this.state.advance,
       AmountDue: this.state.totalAmoutDue,
       TotalAmount: this.state.totalPrice,
+      // IsDone : isdone
     };
     console.log(formdata);
     CommonPost("orders", formdata)
-    .then((res) => res.json())
-    .then((json) => {
-      console.log(json);
-      Swal.fire({
-        position: "bottom",
-        //icon: 'success',
-        title: `${json.message}`,
-        showConfirmButton: false,
-        timer: 1500,
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        Swal.fire({
+          position: "bottom",
+          //icon: 'success',
+          title: `${json.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
-    })
     console.log(formdata);
     this.printHandler();
   };
@@ -500,10 +471,10 @@ class AddProduct extends Component {
         moment(this.state.toDate).format("YYYY-MM-DD") +
         "</strong><br/>"
     );
-    mywindow.document.write("Customer Name:TEST <br/>");
-    mywindow.document.write("Phone Number :0757547686 <br/>");
-    mywindow.document.write("OrderNo:423422 <br/>");
-    mywindow.document.write("Issued By:Test");
+    mywindow.document.write("Customer Name: "+this.state.customerName+"<br/>");
+    mywindow.document.write("Phone Number : "+this.state.phoneNumber+"<br/>");
+    mywindow.document.write("OrderNo: "+this.state.orderNumber+" <br/>");
+    mywindow.document.write("Issued By:"+this.state.loginUser +"");
     mywindow.document.write("<br/><br/><br/>");
     mywindow.document.write("<div>");
     mywindow.document.write(document.getElementById("printContent").innerHTML);
@@ -554,7 +525,7 @@ class AddProduct extends Component {
 
   renderProductDrop = (prod) => {
     let optionItems =
-    prod == null || prod == undefined
+      prod == null || prod == undefined
         ? null
         : prod.map((item) => (
             <option key={item.Id} value={item.Id}>
@@ -680,7 +651,7 @@ class AddProduct extends Component {
                               <strong>Name</strong>
                             </label>
 
-                           {productdrop}
+                            {productdrop}
                           </div>
                         </div>
                       </div>
@@ -788,10 +759,10 @@ class AddProduct extends Component {
                               }
                             >
                               <option value="-1">Work Done By</option>{" "}
-                              <option value="Ford">Ranil : EPF100</option>
-                              <option value="Volvo">Manori : EPF101</option>
-                              <option value="Fiat">Devja : EPF102</option>
-                              <option value="Fiat">Kenuja : EPF103</option>
+                              <option value="1">Ranil : EPF100</option>
+                              <option value="2">Manori : EPF101</option>
+                              <option value="3">Devja : EPF102</option>
+                              <option value="4">Kenuja : EPF103</option>
                             </select>
                           </div>
                         </div>
@@ -843,7 +814,7 @@ class AddProduct extends Component {
                           <button
                             type="button"
                             className="btn btn-primary"
-                            onClick={this.editProduct}
+                            onClick={this.addProduct}
                           >
                             UPDATE ITEM
                           </button>
