@@ -67,7 +67,7 @@ CREATE TABLE `customer_details` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `PhoneNumber_UNIQUE` (`PhoneNumber`),
   UNIQUE KEY `PhoneNumber` (`PhoneNumber`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `employee_commission_details` (
   KEY `employee_commission_detailsOrderId_idx` (`OrderId`),
   CONSTRAINT `employee_commission_detailsOrderId` FOREIGN KEY (`OrderId`) REFERENCES `order_details` (`Id`),
   CONSTRAINT `employee_commission_detailsUserId` FOREIGN KEY (`UserId`) REFERENCES `user_details` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `employee_commission_details` (
 
 LOCK TABLES `employee_commission_details` WRITE;
 /*!40000 ALTER TABLE `employee_commission_details` DISABLE KEYS */;
-INSERT INTO `employee_commission_details` VALUES (4,2,6,10.00,1,'2021-02-08 00:11:23'),(5,2,6,20.00,1,'2021-02-08 00:11:23');
+INSERT INTO `employee_commission_details` VALUES (4,2,6,10.00,1,'2021-02-08 00:11:23'),(5,2,6,20.00,1,'2021-02-08 00:11:23'),(7,1,18,300.00,0,NULL);
 /*!40000 ALTER TABLE `employee_commission_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,6 +123,7 @@ CREATE TABLE `order_details` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `CustomerId` int NOT NULL,
   `OrderTotal` decimal(10,2) NOT NULL,
+  `PaymentMethodId` int NOT NULL,
   `AdvancePayment` decimal(10,2) NOT NULL,
   `AmountDue` decimal(10,2) NOT NULL,
   `IsCompleted` tinyint NOT NULL,
@@ -133,8 +134,9 @@ CREATE TABLE `order_details` (
   `ModifiedBy` int DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `Amount_detailsCustomerId_idx` (`CustomerId`),
+  KEY `Order_DetailsPaymentMethodId_idx` (`PaymentMethodId`),
   CONSTRAINT `Order_DetailsCustomerId` FOREIGN KEY (`CustomerId`) REFERENCES `customer_details` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +145,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-INSERT INTO `order_details` VALUES (1,8,700.00,200.00,500.00,1,NULL,'2021-01-30 09:39:26',1,NULL,NULL),(2,1,700.00,200.00,500.00,0,NULL,'2021-01-30 09:54:18',1,NULL,NULL),(3,1,700.00,200.00,500.00,0,NULL,'2021-01-30 09:55:33',1,NULL,NULL),(4,1,700.00,200.00,500.00,0,NULL,'2021-01-30 10:00:47',1,NULL,NULL),(5,1,700.00,200.00,500.00,0,NULL,'2021-01-31 00:00:05',1,NULL,NULL),(6,1,700.00,200.00,500.00,0,'2021-02-07 23:55:24','2021-01-31 00:01:48',1,NULL,NULL),(11,1,700.85,200.55,500.45,0,NULL,'2021-02-13 16:04:06',1,NULL,NULL),(12,26,2873.36,1000.00,1873.36,0,NULL,'2021-02-13 18:37:48',1,NULL,NULL),(13,1,120854.58,50000.65,70853.93,0,NULL,'2021-02-14 00:10:05',1,NULL,NULL),(14,1,76.23,50.00,26.23,0,NULL,'2021-02-14 01:41:06',1,NULL,NULL),(15,1,69.30,11.00,58.30,0,NULL,'2021-02-14 02:01:35',1,NULL,NULL),(16,30,5.00,0.00,5.00,0,NULL,'2021-02-19 03:34:04',1,NULL,NULL);
+INSERT INTO `order_details` VALUES (1,8,700.00,1,200.00,500.00,1,NULL,'2021-01-30 09:39:26',1,NULL,NULL),(2,1,700.00,2,200.00,500.00,0,NULL,'2021-01-30 09:54:18',1,NULL,NULL),(3,1,700.00,1,200.00,500.00,0,NULL,'2021-01-30 09:55:33',1,NULL,NULL),(4,1,700.00,1,200.00,500.00,0,NULL,'2021-01-30 10:00:47',1,NULL,NULL),(5,1,700.00,2,200.00,500.00,0,NULL,'2021-01-31 00:00:05',1,NULL,NULL),(6,1,700.00,2,200.00,500.00,0,'2021-02-07 23:55:24','2021-01-31 00:01:48',1,NULL,NULL),(11,1,700.85,1,200.55,500.45,0,NULL,'2021-02-13 16:04:06',1,NULL,NULL),(12,26,2873.36,1,1000.00,1873.36,0,NULL,'2021-02-13 18:37:48',1,NULL,NULL),(13,1,120854.58,1,50000.65,70853.93,0,NULL,'2021-02-14 00:10:05',1,NULL,NULL),(14,1,76.23,2,50.00,26.23,0,NULL,'2021-02-14 01:41:06',1,NULL,NULL),(15,1,69.30,1,11.00,58.30,0,NULL,'2021-02-14 02:01:35',1,NULL,NULL),(16,30,5.00,2,0.00,5.00,0,NULL,'2021-02-19 03:34:04',1,NULL,NULL),(17,30,7.00,1,5.00,2.00,0,NULL,'2021-02-19 14:26:09',1,NULL,NULL),(18,30,6000.00,2,2000.00,4000.00,1,'2021-02-20 12:19:40','2021-02-20 12:07:42',1,NULL,NULL);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +174,7 @@ CREATE TABLE `order_details_item` (
   PRIMARY KEY (`Id`),
   KEY `OrderDetailsItem_OrderID_idx` (`OrderId`),
   CONSTRAINT `OrderDetailsItem_OrderID` FOREIGN KEY (`OrderId`) REFERENCES `order_details` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,8 +183,32 @@ CREATE TABLE `order_details_item` (
 
 LOCK TABLES `order_details_item` WRITE;
 /*!40000 ALTER TABLE `order_details_item` DISABLE KEYS */;
-INSERT INTO `order_details_item` VALUES (1,1,6,6,'Description',5,20.00,10.00,1,1.00,'2021-01-30 23:47:27',10,NULL,NULL),(2,6,1,1,'null',6,100.00,50.00,2,10.00,'2021-01-31 00:01:48',10,NULL,NULL),(3,6,2,2,'TEST DESCRIPTION',6,210.00,50.00,2,20.00,'2021-01-31 00:01:48',10,NULL,NULL),(8,11,6,7,'null',6,100.62,50.40,1,10.30,'2021-02-13 16:04:06',10,NULL,NULL),(9,11,1,3,'TEST DESCRIPTION',6,210.33,50.88,2,20.22,'2021-02-13 16:04:06',10,NULL,NULL),(10,12,2,4,'qweqewqewdescritption',14,200.00,2.00,1,140.00,'2021-02-13 18:37:48',1,NULL,NULL),(11,12,6,7,'fsfs',44,3.00,2.00,1,6.60,'2021-02-13 18:37:48',1,NULL,NULL),(12,13,1,1,'sda',111,1111.00,2.00,1,6166.05,'2021-02-14 00:10:05',1,NULL,NULL),(13,14,2,2,'22',7,11.00,1.00,1,3.85,'2021-02-14 01:41:06',1,NULL,NULL),(14,15,6,6,'asdasdasd',7,10.00,1.00,1,3.50,'2021-02-14 02:01:35',1,NULL,NULL),(15,16,1,3,'sda',5,1.00,0.00,1,0.25,'2021-02-19 03:34:04',1,NULL,NULL);
+INSERT INTO `order_details_item` VALUES (1,1,6,6,'Description',5,20.00,10.00,1,1.00,'2021-01-30 23:47:27',10,NULL,NULL),(2,6,1,1,'null',6,100.00,50.00,2,10.00,'2021-01-31 00:01:48',10,NULL,NULL),(3,6,2,2,'TEST DESCRIPTION',6,210.00,50.00,2,20.00,'2021-01-31 00:01:48',10,NULL,NULL),(8,11,6,7,'null',6,100.62,50.40,1,10.30,'2021-02-13 16:04:06',10,NULL,NULL),(9,11,1,3,'TEST DESCRIPTION',6,210.33,50.88,2,20.22,'2021-02-13 16:04:06',10,NULL,NULL),(10,12,2,4,'qweqewqewdescritption',14,200.00,2.00,1,140.00,'2021-02-13 18:37:48',1,NULL,NULL),(11,12,6,7,'fsfs',44,3.00,2.00,1,6.60,'2021-02-13 18:37:48',1,NULL,NULL),(12,13,1,1,'sda',111,1111.00,2.00,1,6166.05,'2021-02-14 00:10:05',1,NULL,NULL),(13,14,2,2,'22',7,11.00,1.00,1,3.85,'2021-02-14 01:41:06',1,NULL,NULL),(14,15,6,6,'asdasdasd',7,10.00,1.00,1,3.50,'2021-02-14 02:01:35',1,NULL,NULL),(15,16,1,3,'sda',5,1.00,0.00,1,0.25,'2021-02-19 03:34:04',1,NULL,NULL),(16,17,2,2,'asdas',7,1.00,0.00,1,0.35,'2021-02-19 14:26:09',1,NULL,NULL),(17,18,1,3,'Test',2,3000.00,0.00,1,300.00,'2021-02-20 12:07:42',1,NULL,NULL);
 /*!40000 ALTER TABLE `order_details_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `paymentmethod_details`
+--
+
+DROP TABLE IF EXISTS `paymentmethod_details`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentmethod_details` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paymentmethod_details`
+--
+
+LOCK TABLES `paymentmethod_details` WRITE;
+/*!40000 ALTER TABLE `paymentmethod_details` DISABLE KEYS */;
+INSERT INTO `paymentmethod_details` VALUES (1,'Card'),(2,'Cash');
+/*!40000 ALTER TABLE `paymentmethod_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -269,9 +295,11 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CompleteOrder`(IN orderId int )
 BEGIN
-       UPDATE order_details
-SET CompletedDate = CURRENT_TIMESTAMP()
-WHERE Id = orderId;
+		UPDATE order_details
+		SET 
+			CompletedDate = CURRENT_TIMESTAMP(),
+			IsCompleted = 1
+		WHERE Id = orderId;
 
         INSERT INTO employee_commission_details
   (UserId, OrderId, Commission)
@@ -442,12 +470,14 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetOrderbyId`( IN orderId int)
 BEGIN
        
-      SELECT OD.Id as OrderId, OrderTotal,AdvancePayment,AmountDue,IsCompleted, OD.CreatedDate, CD.Id AS CustomerId, CD.Name AS CustomerName, CD.PhoneNumber, UD.Name as CreatedBy
+      SELECT OD.Id as OrderId, OrderTotal,AdvancePayment,AmountDue,IsCompleted, OD.CreatedDate, CD.Id AS CustomerId, CD.Name AS CustomerName, CD.PhoneNumber, UD.Name as CreatedBy, PMD.Name as PaymentMethodName
       FROM order_details AS OD
       INNER JOIN customer_details AS CD
       ON OD.CustomerId = CD.Id
       INNER JOIN user_details AS UD
       ON OD.CreatedBy = UD.Id
+      INNER JOIN paymentmethod_details AS PMD
+      ON OD.PaymentMethodId = PMD.Id
       Where OD.Id = orderId;
   
        END ;;
@@ -480,6 +510,25 @@ BEGIN
       Where ODI.OrderId = orderId;
   
        END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetPaymentMethods` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetPaymentMethods`()
+BEGIN
+	Select * From paymentmethod_details;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -524,6 +573,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertOrderDetails`(IN customerId int,
  IN orderTotal decimal(10,2), 
+ IN paymentMethodId int, 
  IN advancePayment decimal(10,2), 
  IN amountDue decimal(10,2), 
  IN isCompleted tinyint, 
@@ -533,9 +583,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertOrderDetails`(IN customerId i
 BEGIN
        
          INSERT INTO order_details
-  (CustomerId, OrderTotal, AdvancePayment, AmountDue, IsCompleted, CompletedDate, CreatedBy)
+  (CustomerId, OrderTotal, PaymentMethodId, AdvancePayment, AmountDue, IsCompleted, CompletedDate, CreatedBy)
 VALUES
-  (customerId, orderTotal, advancePayment, amountDue, isCompleted, completedDate, userId);
+  (customerId, orderTotal, paymentMethodId, advancePayment, amountDue, isCompleted, completedDate, userId);
   
    SELECT LAST_INSERT_ID() INTO orderId ;
        END ;;
@@ -611,4 +661,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-19 13:10:25
+-- Dump completed on 2021-02-20 12:23:22
