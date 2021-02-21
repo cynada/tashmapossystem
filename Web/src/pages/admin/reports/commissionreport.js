@@ -92,12 +92,17 @@ class commissionreport extends Component {
     );
   };
 
+  monthChange = (e) => {
+    this.setState({
+      month:e.target.value
+    })
+  }
   renderCategoryDrop = () => {
     return (
       <select
         value={this.state.month}
         className="form-control"
-        // onChange={(e) => this.categoryChange(e)}
+         onChange={(e) => this.monthChange(e)}
       >
         <option key="-1" value="-1"> Please select a month</option>
         <option key="1" value="1"> January</option>
@@ -148,7 +153,8 @@ class commissionreport extends Component {
       month:this.state.month,
       epfnumber:this.state.epf
     }
-    CommonPost("commissions/usercommission", "formdata")
+    
+    CommonPost("commissions/usercommission", formdata)
     .then((res) => res.json())
     .then((json) => {
       console.log("GG" + json);
@@ -165,7 +171,7 @@ class commissionreport extends Component {
   render() {
     let categorydrop = this.renderCategoryDrop();
     let productdrop = this.renderProductDrop();
-    let table = this.renderDisplayTable();
+    let table = this.renderDisplayTable(this.state.commissionList);
     return (
       <div className="page-content">
         <div className="row">
