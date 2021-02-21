@@ -60,7 +60,27 @@ class editorder extends Component {
       $("#example").DataTable();
     });
   };
-
+  workDoneChange = (e) => {
+    Swal.fire({
+      title: "",
+      text: "Are you sure you want to make this change?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.value) {
+      
+            this.setState((prevState) => ({
+              order: {
+                // object that we want to update
+                ...prevState.order, // keep all other key-value pairs
+                IsDone: !prevState.order.IsDone, // update the value of specific key
+              },
+            }));
+          }});
+      }
+    
   isPaid = (e) => {
     Swal.fire({
       title: "",
@@ -71,31 +91,18 @@ class editorder extends Component {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.value) {
-        let formdata = {
-          OrderId: this.state.orderId,
-        };
-        CommonPost("orders/complete", formdata)
-          .then((res) => res.json())
-          .then((json) => {
-            console.log(json);
-            Swal.fire({
-              position: "bottom",
-              //icon: 'success',
-              title: `${json.message}`,
-              showConfirmButton: false,
-              timer: 1500,
-            });
+      
             this.setState((prevState) => ({
               order: {
                 // object that we want to update
                 ...prevState.order, // keep all other key-value pairs
-                IsCompleted: !prevState.order.IsCompleted, // update the value of specific key
+                IsCompleted: !prevState.order.IsCompleted,
+                IsDone: !prevState.order.IsDone, // update the value of specific key
               },
             }));
-          });
+          }});
       }
-    });
-  };
+    
 
   rendarModal(ordewr) {
     let order = this.state.order;
@@ -182,6 +189,24 @@ class editorder extends Component {
               <td>{order.PaymentMethodName}</td>
             </tr>
             <tr>
+              <td>Work Done</td>
+              <td hidden={order.IsDone}>
+                <p>
+                  Mark as Done
+                  <input
+                    type="checkbox"
+                    id="isdone"
+                    onChange={(e) => this.workDoneChange(e)}
+                    value={order.IsDone}
+                    checked={order.IsDone}
+                  />
+                </p>
+              </td>
+              <td hidden={!order.IsDone}>
+                <p>Done</p>
+              </td>
+            </tr>
+            <tr>
               <td>Payment</td>
               <td hidden={order.IsCompleted}>
                 <p>
@@ -209,21 +234,21 @@ class editorder extends Component {
   //UPDATE THE PRODUCT
 
   editProduct = () => {
-    let id = this.state.orderId;
-    let order = this.state.order;
     let formdata = {
-      payerID: order.user,
-      orderID: order._id,
-      paymentID: this.state.paymentId,
+      OrderId: this.state.orderId,
     };
-    console.log(formdata);
-
-    CommonUpdateById("orders", `${id}/pay`, formdata)
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        Swal.fire("", `${json.message}`, "success");
+    CommonPost("orders/complete", formdata)
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json);
+      Swal.fire({
+        position: "bottom",
+        //icon: 'success',
+        title: `${json.message}`,
+        showConfirmButton: false,
+        timer: 1500,
       });
+    });
   };
 
   /******************************************************MAIN RENDER**********************************88 */
