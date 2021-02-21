@@ -4,17 +4,18 @@ import mysqlConnection from "../mysql";
 
 const router = express.Router();
 
-router.post("/signin", async (req, res) => {
+router.post("/usercommission", async (req, res) => {
   try {
     var epfnumber = req.body.epfnumber;
-    var password = req.body.password;
+    var month = req.body.month;
+    var year = req.body.year;
 
     mysqlConnection.beginTransaction((err) => {
       if (err) {
         throw err;
       }
       mysqlConnection.query(
-        `CALL SignIn('${epfnumber}','${password}');`,
+        `CALL GetUserCommissonsByMonthYear(${month},${year},'${epfnumber}');`,
         (error, results, fields) => {
           if (error) {
             return mysqlConnection.rollback(() => {
@@ -22,12 +23,7 @@ router.post("/signin", async (req, res) => {
             }); 
           }
           console.log(results);
-          if (results[0][0].LoginStatus == 0) {
-            res.send({ login: false });
-          }
-          if (results[0][0].LoginStatus == 1) {
-            res.send({ login: true, isAdmin: results[0][0].IsAdmin == 1 ? true : false });
-          }
+          res.send(results[0]);
         }
       );
     });

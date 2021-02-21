@@ -67,7 +67,7 @@ class App extends React.Component {
       ? true
       : `/${pathArray[1]}` === "/admin-viewsales"
       ? true
-      : `/${pathArray[1]}` === "/user-searchorder"
+      : `/${pathArray[1]}` === "/searchorder"
       ? true
       : `/${pathArray[1]}` === "/user-vieworders"
       ? true
@@ -120,7 +120,7 @@ class App extends React.Component {
               <Route path="/admin-commissionreport" component={CommissionReport} />
 
               {/* USER */}
-              <Route path="/user-searchorder" component={SearchOrder} />
+              <Route path="/searchorder" component={SearchOrder} />
               <Route path="/user-addorder" component={AddOrder} />
               <Route path="/user-vieworders" component={SingleOrder} />
               <Route path="/user-searchorders" component={SearchOrders} />
