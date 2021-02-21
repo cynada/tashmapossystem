@@ -95,6 +95,7 @@ class vieworders extends Component {
         : contetnts.map((item) => {
             //Progress
             let IsCompleted = item.IsCompleted == 1 ? "Yes" : "No";
+            let IsDone = item.IsDone == 1 ? "Yes" : "No";
             return (
               <tr key={item.OrderId}>
                 <td>{item.OrderId}</td>
@@ -110,6 +111,7 @@ class vieworders extends Component {
                     View
                   </button>
                 </td>
+                <td>{IsDone}</td>
                 <td>{IsCompleted}</td>
                 {/* <td>{item.isPaid}</td>
               <td>{item.isPaid}</td> */}
@@ -129,6 +131,7 @@ class vieworders extends Component {
               <th>Order Date</th>
               <th>Total Price</th>
               <th>Order Details</th>
+              <th>Work Done</th>
               <th>Completed</th>
               {/* <th>Completed</th>
               <th>

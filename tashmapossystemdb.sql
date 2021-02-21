@@ -253,18 +253,18 @@ DROP TABLE IF EXISTS `user_details`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_details` (
   `Id` int NOT NULL AUTO_INCREMENT,
+  `Password` varchar(50) NOT NULL DEFAULT '1234',
   `Name` varchar(100) NOT NULL,
-  `PhoneNumber` varchar(10) NOT NULL,
+  `Description` varchar(100) DEFAULT NULL,
   `NIC` varchar(12) NOT NULL,
   `EPFNumber` varchar(12) NOT NULL,
-  `BasicSalary` int NOT NULL,
+  `BasicSalary` int DEFAULT NULL,
   `IsAdmin` tinyint NOT NULL DEFAULT '0',
   `CreatedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `CreatedBy` int NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `ModifiedBy` int DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `PhoneNumber_UNIQUE` (`PhoneNumber`),
   UNIQUE KEY `NIC_UNIQUE` (`NIC`),
   UNIQUE KEY `EPFNumber_UNIQUE` (`EPFNumber`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -276,7 +276,7 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
-INSERT INTO `user_details` VALUES (1,'Iman','0757575986','983612245V','5465465',20,0,'2021-02-07 20:17:28',1,NULL,NULL),(2,'Dulan','0779767556','984612245V','56465',30,1,'2021-02-07 20:18:44',1,NULL,NULL);
+INSERT INTO `user_details` VALUES (1,'abcd@1234','Iman','0757575986','983612245V','5465465',20,0,'2021-02-07 20:17:28',1,NULL,NULL),(2,'abcd@1234','Dulan','0779767556','984612245V','56465',30,1,'2021-02-07 20:18:44',1,NULL,NULL);
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -651,6 +651,55 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SignIn` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SignIn`(
+IN username varchar(50),
+IN password_p VARCHAR(20)
+ )
+BEGIN
+      SELECT count(*) AS LoginStatus, ud.IsAdmin
+      FROM user_details ud
+      WHERE ud.EPFNumber = username && ud.Password = password_p;         
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SignInTest` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SignInTest`(
+IN username varchar(50),
+IN password_p VARCHAR(20),
+      OUT yes_no int 
+ )
+BEGIN
+      SELECT count(*) INTO yes_no
+      FROM user_details ud
+      WHERE ud.EPFNumber = username && ud.Password = password_p;         
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -661,4 +710,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-20 12:23:22
+-- Dump completed on 2021-02-21 14:21:59
