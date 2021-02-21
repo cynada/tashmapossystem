@@ -114,12 +114,11 @@ router.post("/", async (req, res) => {
               var PaymentMethodId = parseFloat(req.body.PaymentMethodId);
               var AdvancePayment = parseFloat(req.body.Advance);
               var AmountDue = parseFloat(req.body.AmountDue);
-              var IsCompleted = JSON.parse(req.body.IsCompleted);
               var CompletedDate = req.body.CompletedDate;
 
               console.log(OrderTotal);
               mysqlConnection.query(
-                `CALL InsertOrderDetails(${CustomerId}, ${OrderTotal}, ${PaymentMethodId},${AdvancePayment}, ${AmountDue}, ${IsCompleted}, ${CompletedDate}, ${User}, @orderId);`,
+                `CALL InsertOrderDetails(${CustomerId}, ${OrderTotal}, ${PaymentMethodId},${AdvancePayment}, ${AmountDue}, ${CompletedDate}, ${User}, @orderId);`,
                 (error, results, fields) => {
                   if (error) {
                     return mysqlConnection.rollback(() => {
