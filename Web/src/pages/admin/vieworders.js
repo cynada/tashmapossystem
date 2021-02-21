@@ -19,39 +19,9 @@ import {
 } from "../../config";
 import $ from "jquery";
 import DataTable from "datatables";
+import {menuItems} from "../menuItems";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "Manage Products",
-    icon: "fas fa-battery-half",
-    link: "/admin-addproducts",
-  },
-  {
-    id: 2,
-    label: "Manage Users",
-    icon: "fas fa-battery-half",
-    link: "/admin-adduser",
-  },
-  {
-    id: 3,
-    label: "View Orders",
-    icon: "fas fa-battery-half",
-    link: "/admin-vieworders",
-  },
-  {
-    id: 4,
-    label: "View Sales",
-    icon: "fas fa-battery-half",
-    link: "/admin-viewsales",
-  },
-  {
-    id: 5,
-    label: "Log Out",
-    icon: "fas fa-battery-half",
-    link: "/admin-login",
-  },
-];const NavLink = (props) => (
+const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
     {props.label}

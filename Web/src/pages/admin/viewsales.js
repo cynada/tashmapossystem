@@ -4,39 +4,8 @@ import { Bar, Line, Pie, Doughnut, Polar } from "react-chartjs-2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 
 import { SideNav, Chevron, Icon } from "react-side-nav";
+import {menuItems} from "../menuItems";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "Manage Products",
-    icon: "fas fa-battery-half",
-    link: "/admin-addproducts",
-  },
-  {
-    id: 2,
-    label: "Manage Users",
-    icon: "fas fa-battery-half",
-    link: "/admin-adduser",
-  },
-  {
-    id: 3,
-    label: "View Orders",
-    icon: "fas fa-battery-half",
-    link: "/admin-vieworders",
-  },
-  {
-    id: 4,
-    label: "View Sales",
-    icon: "fas fa-battery-half",
-    link: "/admin-viewsales",
-  },
-  {
-    id: 5,
-    label: "Log Out",
-    icon: "fas fa-battery-half",
-    link: "/admin-login",
-  },
-];
 const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
