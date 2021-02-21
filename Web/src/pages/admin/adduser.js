@@ -121,14 +121,11 @@ class AddUser extends Component {
     let formdata = {
       name: this.state.productName,
       description: this.state.description,
-      price: this.state.price,
-      image: this.state.base64string,
-      brand: this.state.brand,
-      countInStock: this.state.instock,
-      category: this.state.category,
+      epf:this.state.epf,
+      nic:this.state.nic
     };
 
-    CommonUpdateById("products", id, formdata)
+    CommonUpdateById("users", id, formdata)
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
@@ -141,12 +138,12 @@ class AddUser extends Component {
         });
       })
       .then(() => {
-        CommonGet("products", "")
+        CommonGet("users", "")
           .then((res) => res.json())
           .then((json) => {
             console.log("GG" + json);
             this.setState({
-              productList: json,
+              userList: json,
             });
           });
       });
@@ -204,30 +201,24 @@ class AddUser extends Component {
   };
 
   selectHandler = (id) => {
-    //https://premiumlkbackend.azurewebsites.net/api/products/5fb2c01dccbaf0005a97ba77
-    CommonGetById("products", id)
-      .then((res) => res.json())
-      .then((json) => {
-        console.log("GG" + json);
-        this.setState({
-          editProduct: json,
-          isEdit: true,
-          isDisable: true,
-        });
+
+    let userList =this.state.userList;
+    let tableContent =
+    userList === undefined
+      ? null
+      : userList.filter((item) => {
+        if(item.id == id){
+          return item;
+        }
       })
-      .then(() => {
-        let editProduct = this.state.editProduct;
-        this.setState({
-          productName: editProduct.name,
-          description: editProduct.description,
-          price: editProduct.price,
-          category: editProduct.category,
-          base64string: editProduct.image,
-          instock: editProduct.countInStock,
-          brand: editProduct.brand,
-          editProductId: editProduct._id,
-        });
-      });
+     
+      this.setState({
+        name : tableContent[0].name ,
+        nic : tableContent[0].nic ,
+        epf: tableContent[0].epf ,
+        description: tableContent[0].description ,
+      })
+
   };
 
   //delete a product
@@ -263,28 +254,16 @@ class AddUser extends Component {
         : contetnts.map((item) => {
             let imageURL = item.image;
             return (
-              <tr key={item._id}>
-                <td>
-                  <img src={imageURL} style={{ height: "100px" }}></img>
-                </td>
-                <td>{item.category}</td>
+              <tr key={item.id}>
                 <td>{item.name}</td>
-                <td>{item.price}</td>
-                <td>
-                  {" "}
-                  <input
-                    id="id2"
-                    type="checkbox"
-                    defaultChecked //={prList.isActive}
-                    // onChange={e => this.selectHandler(prList.id)}
-                  />
-                </td>
+                <td>{item.nic}</td>
+                <td>{item.epf}</td>
                 <td>
                   {" "}
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={(e) => this.selectHandler(item._id)}
+                    onClick={(e) => this.selectHandler(item.id)}
                   >
                     EDIT
                   </button>
@@ -292,7 +271,7 @@ class AddUser extends Component {
                 <td>
                   <a
                     title="Delete "
-                    onClick={() => this.formItemDeleteHandler(item._id)}
+                    onClick={() => this.formItemDeleteHandler(item.id)}
                   >
                     <i className="fa fa-trash fa-2x fore-color-cyan icon-blue"></i>{" "}
                   </a>
@@ -307,13 +286,12 @@ class AddUser extends Component {
         <Table striped bordered hover id="example">
           <thead>
             <tr>
-              <th>User Image</th>
+            
               <th>Full Name</th>
-              <th>Gender</th>
               <th>NIC</th>
-              <th>In Stock</th>
-              <th></th>
-              <th></th>
+              <th>EPF Number</th>
+              <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -340,19 +318,7 @@ class AddUser extends Component {
 
   resetHandler = () => {
     this.setState({
-      price: "",
-      productName: "",
-      description: "",
-      categoryId: -1,
-      instock: "",
-      category: "",
-      brand: "",
-      editProductId: "",
-      base64string:
-        "https://lh3.googleusercontent.com/proxy/e0eh1T0oEXKbYGCgFPdsNigBDZqlbuNO0yaHTXYP1ASL-CoiEnZOBAw3jdywchu1E8IpEgYusbNKwHZ6UkwjsBxr9KaLpADQdGGf_2y7BG_BFTQuwf21kcNh9sM1",
-      editProduct: [],
-      isEdit: false,
-      isDisable: false,
+     
     });
   };
 

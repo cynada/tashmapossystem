@@ -15,39 +15,8 @@ import {
 } from "../../../config";
 import $ from "jquery";
 import DataTable from "datatables";
+import {menuItems} from "../../menuItems";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "Manage Products",
-    icon: "fas fa-battery-half",
-    link: "/admin-addproducts",
-  },
-  {
-    id: 2,
-    label: "Manage Users",
-    icon: "fas fa-battery-half",
-    link: "/admin-adduser",
-  },
-  {
-    id: 3,
-    label: "View Orders",
-    icon: "fas fa-battery-half",
-    link: "/admin-vieworders",
-  },
-  {
-    id: 4,
-    label: "View Sales",
-    icon: "fas fa-battery-half",
-    link: "/admin-viewsales",
-  },
-  {
-    id: 5,
-    label: "Log Out",
-    icon: "fas fa-battery-half",
-    link: "/admin-login",
-  },
-];
 const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
@@ -60,7 +29,32 @@ class commissionreport extends Component {
     super(props);
   }
 
-  componentWillMount() {}
+  state={
+    month:"",
+    user:"",
+    epf:"",
+    year:"",
+    commissionList:[]
+  }
+
+  jqueryScripts = () => {
+    $(document).ready(function () {
+      $("#example").DataTable();
+    });
+  };
+  componentWillMount() {
+    // CommonGet("products", "")
+    // .then((res) => res.json())
+    // .then((json) => {
+    //   console.log("GG" + json);
+    //   this.setState({
+    //     productList: json,
+    //   });
+    // })
+    // .then(() => {
+    //   this.jqueryScripts();
+    // });
+  }
 
   jqueryScripts = () => {
     $(document).ready(function () {
@@ -74,10 +68,9 @@ class commissionreport extends Component {
         : contetnts.map((item) => {
             return (
               <tr key={item.id}>
-                <td>Username</td>
-                <td>Username</td>
-                <td>Username</td>
-                <td>Username</td>
+                <td>{item.Name}</td>
+                <td>{item.OrderId}</td>
+                <td>{item.Commission}</td>
               </tr>
             );
           });
@@ -88,22 +81,90 @@ class commissionreport extends Component {
         <Table className="table-striped table-bordered hover" id="example">
           <thead>
             <tr>
-              <th>User Name</th>
-              <th>EPF Number</th>
+              <th>Name</th>
               <th>Order Id</th>
               <th>Commission</th>
             </tr>
           </thead>
-          <tbody>
-            {tableContent}
-          </tbody>
+          <tbody>{tableContent}</tbody>
         </Table>
       </div>
     );
   };
 
-   render() {
-    // let imageURL = this.state.base64string;
+  renderCategoryDrop = () => {
+    return (
+      <select
+        value={this.state.month}
+        className="form-control"
+        // onChange={(e) => this.categoryChange(e)}
+      >
+        <option key="-1" value="-1"> Please select a month</option>
+        <option key="1" value="1"> January</option>
+        <option key="2" value="2"> February </option>
+        <option key="3" value="3"> March</option>
+        <option key="4" value="4"> April</option>
+        <option key="5" value="5"> May</option>
+        <option key="6" value="6"> June</option>
+        <option key="7" value="7"> July</option>
+        <option key="8" value="8"> August</option>
+        <option key="9" value="9"> September</option>
+        <option key="10" value="10"> October</option>
+        <option key="11" value="11"> November</option>
+        <option key="12" value="12"> December</option>
+
+      </select>
+    );
+  };
+
+  renderProductDrop = () => {
+    return (
+      <select
+        value={this.state.month}
+        className="form-control"
+        // onChange={(e) => this.categoryChange(e)}
+      >
+        <option key="-1" value="-1"> Please select a month</option>
+        <option key="1" value="1"> January</option>
+        <option key="2" value="2"> February </option>
+        <option key="3" value="3"> March</option>
+        <option key="4" value="4"> April</option>
+        <option key="5" value="5"> May</option>
+        <option key="6" value="6"> June</option>
+        <option key="7" value="7"> July</option>
+        <option key="8" value="8"> August</option>
+        <option key="9" value="9"> September</option>
+        <option key="10" value="10"> October</option>
+        <option key="11" value="11"> November</option>
+        <option key="12" value="12"> December</option>
+
+      </select>
+    );
+  };
+  searchComm = () => {
+
+    let formdata = {
+      year :this.state.year,
+      month:this.state.month,
+      epfnumber:this.state.epf
+    }
+    CommonPost("commissions/usercommission", "formdata")
+    .then((res) => res.json())
+    .then((json) => {
+      console.log("GG" + json);
+      this.setState({
+        commissionList: json,
+      });
+    })
+    .then(() => {
+      this.jqueryScripts();
+    });
+
+  }
+
+  render() {
+    let categorydrop = this.renderCategoryDrop();
+    let productdrop = this.renderProductDrop();
     let table = this.renderDisplayTable();
     return (
       <div className="page-content">
@@ -146,7 +207,89 @@ class commissionreport extends Component {
                 </div>
                 <div className="row">
                   <div className="col-12">
-                      <div>{table}</div>
+                    <form id="contact-form">
+                      <div className="messages" />
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>
+                              <strong>Month</strong>
+                            </label>
+                            {categorydrop}
+                          </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="form-group">
+                            <label>
+                              <strong>Price</strong>
+                            </label>
+
+                            <input
+                              id="form_email"
+                              type="number"
+                              name="email"
+                              className="form-control"
+                              placeholder="EPF Number"
+                              required="required"
+                              value={this.state.epf}
+                              onChange={(e) =>
+                                this.setState({ epf: e.target.value })
+                              }
+                              data-error="Price is required."
+                            />
+                            <div className="help-block with-errors" />
+                          </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="form-group">
+                            <label>
+                              <strong>Price</strong>
+                            </label>
+
+                            <input
+                              id="form_email"
+                              type="number"
+                              name="email"
+                              className="form-control"
+                              placeholder="Year"
+                              required="required"
+                              value={this.state.year}
+                              onChange={(e) =>
+                                this.setState({ year: e.target.value })
+                              }
+                              data-error="Price is required."
+                            />
+                            <div className="help-block with-errors" />
+                          </div>
+                        </div>
+                        {/* <div className="col-md-6">
+                          <div className="form-group">
+                            <label>
+                              <strong>User Name</strong>
+                            </label>
+
+                            {productdrop}
+                          </div>
+                        </div> */}
+                      </div>
+                      <div className = "row">
+                      <div className="col-md-3">
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        hidden={this.state.isDisable}
+                        onClick={this.searchComm}
+                      >
+                        SEARCH ITEM
+                      </button>
+                    </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <div>{table}</div>
                   </div>
                 </div>
               </div>

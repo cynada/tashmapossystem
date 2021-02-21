@@ -38,6 +38,9 @@ import SingleOrder from "./pages/user/viewsingleorder";
 import SearchOrders from "./pages/user/searchorders";
 import ResetPassword from "./pages/user/resetpassword";
 
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import 'sweetalert2/src/sweetalert2.scss'
 
 class App extends React.Component {
   constructor(props) {

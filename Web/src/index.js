@@ -11,6 +11,9 @@ import * as serviceWorker from './serviceWorker';
 import {rootReducer} from './reducers';
 import thunk from 'redux-thunk';
 import {createStore,applyMiddleware,compose } from 'redux';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import 'sweetalert2/src/sweetalert2.scss'
 
 class Root extends React.Component {
     render() {

@@ -324,8 +324,9 @@ class AddProduct extends Component {
           <tbody>{tableContent}</tbody>
           <br/><br/>
           <tfoot>
-            
+         
             <tr>
+            <br/><br/>
               <td colSpan="4"></td>
               <td><strong>Total Price : </strong></td>
               <td style={{textAlign:'end'}}>{this.state.totalPrice}</td>
@@ -439,8 +440,40 @@ class AddProduct extends Component {
       totalAmoutDue: totalAmoutDue,
     });
   };
+  formValidations = () => {
+
+    let isValid = true;
+    let message = "";
+
+    if(this.state.customerName == ""){
+      isValid = false;
+      message = "Please enter customer name";
+    }
+    if(this.state.phoneNumber == ""){
+      isValid = false;
+      message = "Please enter phone number";
+    }
+    if(this.state.itemList.length <= 0){
+      isValid = false;
+      message = "No products in order!";
+    }
+    if(this.state.paymentMethodId == ""){
+      isValid = false;
+      message = "Please enter payment method";
+    }
+    let valid = {
+      isValid : isValid ,
+      message : message
+    }
+      return valid;
+  }
 
   searchAndPrint = () => {
+
+
+    let isValid = this.formValidations();
+    console.log(isValid,"asdsads");
+    if(isValid.isValid){
     let isdone = (this.state.totalAmoutDue = 0 ? true : false);
     let formdata = {
       CustomerName: this.state.customerName,
@@ -470,6 +503,10 @@ class AddProduct extends Component {
       });
     console.log(formdata);
     this.printHandler();
+    }
+    else{
+      Swal.fire(`${isValid.message}`)
+    }
   };
 
   //printhandler******************************************************
@@ -580,7 +617,7 @@ class AddProduct extends Component {
 
     return (
       <select
-        value={this.state.productId}
+        value={this.state.paymentMethodId}
         className="form-control"
         onChange={(e) => this.paymentMethodChange(e)}
       >
@@ -866,7 +903,7 @@ class AddProduct extends Component {
                             UPDATE ITEM
                           </button>
                         </div>
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
+                        {/* <div className="col-md-3" hidden={!this.state.isEdit}>
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -874,11 +911,8 @@ class AddProduct extends Component {
                           >
                             RESET
                           </button>
-                        </div>
-                        <div
-                          className="col-md-3
-                        "
-                        >
+                        </div> */}
+                        <div className="col-md-3" hidden={this.state.isEdit}>
                           <button
                             type="button"
                             className="btn btn-primary"
