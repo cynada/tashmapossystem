@@ -580,7 +580,7 @@ class AddProduct extends Component {
 
     return (
       <select
-        value={this.state.productId}
+        value={this.state.paymentMethodId}
         className="form-control"
         onChange={(e) => this.paymentMethodChange(e)}
       >
