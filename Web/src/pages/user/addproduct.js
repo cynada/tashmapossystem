@@ -74,7 +74,7 @@ class AddProduct extends Component {
       discount: "",
       advance: "",
       totalPrice: "",
-      totalAmoutDue: "",
+      totalAmountDue: "",
       customerName: "",
       phoneNumber: "",
       id: 0,
@@ -180,7 +180,7 @@ class AddProduct extends Component {
     this.setState({
       itemList: arrayList,
       totalPrice: totalPriceAddition,
-      totalAmoutDue: totalPriceAddition,
+      totalAmountDue: totalPriceAddition,
       id: this.state.id + 1,
       isEdit: false,
     });
@@ -338,7 +338,7 @@ class AddProduct extends Component {
             <tr>
               <td colSpan="4"></td>
               <td><strong>Amount Due : </strong></td>
-              <td style={{textAlign:'end'}}>{this.state.totalAmoutDue}</td>
+              <td style={{textAlign:'end'}}>{this.state.totalAmountDue}</td>
             </tr>
           </tfoot>
         </table>
@@ -433,25 +433,23 @@ class AddProduct extends Component {
   };
 
   advanceChange = (e) => {
-    var totalAmoutDue = this.state.totalPrice - e.target.value;
-    totalAmoutDue = this.setState({
+    var totalAmountDue = this.state.totalPrice - e.target.value;
+    totalAmountDue = this.setState({
       advance: e.target.value,
-      totalAmoutDue: totalAmoutDue,
+      totalAmountDue: totalAmountDue,
     });
   };
 
   searchAndPrint = () => {
-    let isdone = (this.state.totalAmoutDue = 0 ? true : false);
+    let isdone = (this.state.totalAmountDue = 0 ? true : false);
     let formdata = {
       CustomerName: this.state.customerName,
       PhoneNumber: this.state.phoneNumber,
       Orders: this.state.itemList,
-      IsCompleted: false,
-      CompletedDate: null,
       UserId: 1,
       PaymentMethodId: this.state.paymentMethodId,
       Advance: this.state.advance,
-      AmountDue: this.state.totalAmoutDue,
+      AmountDue: this.state.totalAmountDue,
       TotalAmount: this.state.totalPrice,
       // IsDone : isdone
     };
@@ -941,10 +939,10 @@ class AddProduct extends Component {
                               className="form-control"
                               placeholder="Amount Due"
                               required="required"
-                              value={this.state.totalAmoutDue}
+                              value={this.state.totalAmountDue}
                               disabled
                               onChange={(e) => (e) =>
-                                this.totalAmuntDueChange(e)}
+                                this.totalAmountDueChange(e)}
                               data-error="Price is required."
                             />
                           </div>
