@@ -19,14 +19,14 @@ router.post("/signin", async (req, res) => {
           if (error) {
             return mysqlConnection.rollback(() => {
               throw error;
-            });
-            
+            }); 
           }
+          console.log(results);
           if (results[0][0].LoginStatus == 0) {
             res.send({ login: false });
           }
           if (results[0][0].LoginStatus == 1) {
-            res.send({ login: true });
+            res.send({ login: true, isAdmin: results[0][0].IsAdmin == 1 ? true : false });
           }
         }
       );

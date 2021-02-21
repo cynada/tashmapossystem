@@ -30,42 +30,63 @@ class Login extends Component {
 
   login = () => {
     console.log("login ");
-    this.setState({
-      isloader: true,
-    });
+    // this.setState({
+    //   isloader: true,
+    // });
     // var
     let formdata = {
-      email: this.state.email,
+      epfnumber: this.state.email,
       password: this.state.password,
     };
     console.log(formdata);
-   
-    // CommonPost("users/signin", formdata)
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     sessionStorage.setItem("token", json.token);
-    //     this.setState({
-    //       token: json.token,
-    //       isloader: false,
-    //     });
-    //     //window.location.reload();
-    //   })
-    //   .then(() => {
-    //     if (this.state.token === undefined) {
-    //       Swal.fire("Invalid Credentials!");
-    //       console.log("NOT LOGGEDIN!");
-    //     } else {
-    //       Swal.fire({
-    //         position: "center",
-    //         //icon: 'success',
-    //         title: "Welcome Admin!",
-    //         showConfirmButton: false,
-    //         timer: 1500,
-    //       });
-          // console.log("LOGGEDIN!");
-          this.props.history.push("/admin-addproducts");
-      //  }
-      //});
+
+    CommonPost("users/signin", formdata)
+      .then((res) => res.json())
+      .then((json) => {
+        // sessionStorage.setItem("token", json.token);
+        // this.setState({
+        //   token: json.token,
+        //   isloader: false,
+        // });
+        console.log(json)
+        // //window.location.reload();
+        if (json.login === false) {
+          Swal.fire("Invalid Credentials!");
+          console.log("NOT LOGGEDIN!");
+          this.setState({
+            isloader: false,
+          });
+        }
+       else if (json.login === true && json.isAdmin===true) {
+          this.setState({
+            isloader: false,
+          });
+          Swal.fire({
+            position: "center",
+            //icon: 'success',
+            title: "Welcome Admin!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          
+          console.log("LOGGEDIN!");
+          this.props.history.push("/admin-vieworders");
+        }
+        else if (json.login === true && !json.isAdmin) {
+          this.setState({
+            isloader: false,
+          });
+          Swal.fire({
+            position: "center",
+            //icon: 'success',
+            title: "Welcome User!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          console.log("LOGGEDIN!");
+          this.props.history.push("/user-addorder");
+        }
+      })
   };
 
   render() {
@@ -77,10 +98,7 @@ class Login extends Component {
             <Row className="justify-content-center">
               <Col className="col-5">
                 <div>
-                  <img
-                    src={LOGO}
-                    style={({ width: "100%" , height: "40vh" })}
-                  />
+                  <img src={LOGO} style={{ width: "100%", height: "40vh" }} />
                 </div>
                 <h2 className="text-center mb-3">
                   <strong>Sign In</strong>
