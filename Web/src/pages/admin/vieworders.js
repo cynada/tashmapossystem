@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
-import {Navbar,NavDropdown,Nav,FormControl} from "react-bootstrap";
+import { Navbar, NavDropdown, Nav, FormControl } from "react-bootstrap";
 // import ImageUploader from 'react-images-upload';
 // import datatables from "react-jquery-datatables";
 // import 'react-table/react-table.css';
@@ -19,7 +19,9 @@ import {
 } from "../../config";
 import $ from "jquery";
 import DataTable from "datatables";
-import {menuItems} from "../menuItems";
+import { menuItems } from "../menuItems";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const NavLink = (props) => (
   <a href={props.to} {...props}>
@@ -39,12 +41,12 @@ class vieworders extends Component {
     isSelectAll: false,
     orderList: [],
     order: [],
+    startDate: new Date(),
+    endDate: new Date(),
   };
 
   constructor(props) {
     super(props);
-
-    
   }
 
   componentWillMount() {
@@ -66,13 +68,9 @@ class vieworders extends Component {
     });
   };
 
-
-
- 
-
   modalOpen = (id) => {
-    sessionStorage.setItem("order",id);
-    this.props.history.push('./admin-editorder');
+    sessionStorage.setItem("order", id);
+    this.props.history.push("./admin-editorder");
     //window.alert(id);
     // CommonGetById("orders", id)
     //   .then((res) => res.json())
@@ -98,6 +96,8 @@ class vieworders extends Component {
             let IsDone = item.IsDone == 1 ? "Yes" : "No";
             return (
               <tr key={item.OrderId}>
+                <td>{item.CustomerName}</td>
+                <td>{item.PhoneNumber}</td>
                 <td>{item.OrderId}</td>
                 <td>{moment(item.CreatedDate).format("DD-MM-YYYY")}</td>
                 <td>{item.OrderTotal}</td>
@@ -127,6 +127,8 @@ class vieworders extends Component {
         <Table striped bordered hover id="example">
           <thead>
             <tr>
+              <th>Customer Name</th>
+              <th>Phone Number</th>
               <th>Order Id</th>
               <th>Order Date</th>
               <th>Total Price</th>
@@ -155,8 +157,6 @@ class vieworders extends Component {
     );
   };
 
-  
-
   render() {
     let contetntsDisplay = this.renderDisplay(this.state.orderList);
 
@@ -167,26 +167,25 @@ class vieworders extends Component {
       <div className="page-content">
         <div className="row">
           <div className="col-md-3">
-<div className="sidebar">
-          <center>
-  <img src={LOGO} style={{ width: "250px" }} />          </center>
-         
-                {/* <img src={'./src/assets/images/premiumlogo.jpg'}/> */}
-                {/* <div>
+            <div className="sidebar">
+              <center>
+                <img src={LOGO} style={{ width: "250px" }} />{" "}
+              </center>
+
+              {/* <img src={'./src/assets/images/premiumlogo.jpg'}/> */}
+              {/* <div>
                       <img src={LOGO} style={{width:"auto"},{height:"50vh"}}/>
                       </div> */}
-            <SideNav
-              items={menuItems}
-              linkComponent={NavLink}
-              chevronComponent={Chevron}
-              iconComponent={Icon}
-            />
-             </div>
+              <SideNav
+                items={menuItems}
+                linkComponent={NavLink}
+                chevronComponent={Chevron}
+                iconComponent={Icon}
+              />
+            </div>
           </div>
           <div className="col-md-9">
             <section>
-               
-
               <div className="container">
                 <div className="row justify-content-center text-center">
                   <div className="col-12 col-md-12 col-lg-8 mb-8 mb-lg-0">
@@ -195,22 +194,50 @@ class vieworders extends Component {
                       {/* <span className="badge badge-primary p-2">
                     <i className="la la-bold ic-3x rotation" />
                   </span> */}
-                  
                       <h2 className="mt-4">
-                     
-                      
                         <strong>MANAGE ORDERS</strong>
                       </h2>
-                       <p className="lead mb-0 ">Tashma Studio & Digital Lab</p>{" "}
+                      <p className="lead mb-0 ">Tashma Studio & Digital Lab</p>{" "}
                       <p className="lead mb-0 ic-2x rotation 90">📸</p>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="col-md-3">
+                          <label>From Date</label>
+                          <DatePicker
+                            selected={this.state.startDate}
+                            onChange={(date) =>
+                              this.setState({ startDate: date })
+                            }
+                          />
+                        </div>
+                        <br />
+                        <div className="col-md-3">
+                          <label>To Date</label>
+                          <DatePicker
+                            selected={this.state.endDate}
+                            onChange={(date) =>
+                              this.setState({ endDate: date })
+                            }
+                          />
+                        </div>
+                        <br />
+                        <br />
+                        <div className="col-md-3">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            hidden={this.state.isDisable}
+                            onClick={this.addProduct}
+                          >
+                            SEARCH ITEM
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div>{contetntsDisplay}</div>
-
-              
-
-              
               </div>
             </section>
           </div>
