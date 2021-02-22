@@ -45,7 +45,7 @@ class AddProduct extends Component {
       discount: "",
       advance: "",
       totalPrice: "",
-      totalAmoutDue: "",
+      totalAmountDue: "",
       customerName: "",
       phoneNumber: "",
       id: 0,
@@ -175,7 +175,7 @@ class AddProduct extends Component {
     this.setState({
       itemList: arrayList,
       totalPrice: totalPriceAddition,
-      totalAmoutDue: totalPriceAddition,
+      totalAmountDue: totalPriceAddition,
       id: this.state.id + 1,
       isEdit: false,
     });
@@ -443,10 +443,10 @@ class AddProduct extends Component {
   };
 
   advanceChange = (e) => {
-    var totalAmoutDue = this.state.totalPrice - e.target.value;
-    totalAmoutDue = this.setState({
+    var totalAmountDue = this.state.totalPrice - e.target.value;
+    totalAmountDue = this.setState({
       advance: e.target.value,
-      totalAmoutDue: totalAmoutDue,
+      totalAmountDue: totalAmountDue,
     });
   };
   formValidations = () => {
@@ -1009,7 +1009,7 @@ class AddProduct extends Component {
                               className="form-control"
                               placeholder="Amount Due"
                               required="required"
-                              value={this.state.totalAmoutDue}
+                              value={this.state.totalAmountDue}
                               disabled
                               // onChange={(e) => this.totalAmuntDueChange(e)}
                               data-error="Price is required."
