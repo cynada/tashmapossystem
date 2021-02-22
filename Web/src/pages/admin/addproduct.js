@@ -630,6 +630,26 @@ class AddProduct extends Component {
                           </div>
                         </div>
                       </div>
+                      <div className="row">
+                      <div className="col-md-3">
+                      <div className="form-group">
+                            <label>
+                              <strong>Commission %</strong>
+                            </label>
+
+                            <input
+                              id="Commission"
+                              type="number"
+                              className="form-control"
+                              value={this.state.commission}
+                              onChange={(e) =>
+                                this.setState({ commission: e.target.value })
+                              }
+                              placeholder="Commission"
+                            />
+                          </div>
+                          </div>
+                        </div>
                       {/* <div className="row">
                         <div className="col-md-6">
                           <Form.Group controlId="formBasicEmail">

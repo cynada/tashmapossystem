@@ -20,37 +20,8 @@ import DataTable from "datatables";
 import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 import moment from "moment";
+import {menuItems} from "../menuItemsUser";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "New Order",
-    icon: "fas fa-battery-half",
-    link: "/user-addorder",
-    items: [
-      { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-      { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-    ],
-  },
-  {
-    id: 2,
-    label: "Search Orders",
-    icon: "fas fa-battery-half",
-    link: "/user-searchorder",
-  },
-  {
-    id: 3,
-    label: "View Sales",
-    icon: "fas fa-battery-half",
-    link: "/admin-viewsales",
-  },
-  {
-    id: 4,
-    label: "Log Out",
-    icon: "fas fa-battery-half",
-    link: "/admin-login",
-  },
-];
 const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
@@ -80,8 +51,10 @@ class AddProduct extends Component {
       id: 0,
       isDone: false,
       isEdit: false,
-      loginUser:"",
-      orderNumber:""
+      loginUser: "",
+      orderNumber: "",
+      currentbalance: 0,
+      qtyLeft: 0,
     };
   }
 
@@ -92,6 +65,11 @@ class AddProduct extends Component {
   };
 
   componentWillMount() {
+    let peticash = sessionStorage.getItem("peticash");
+    if(peticash == null || peticash == undefined){
+        this.renderPopupModal();
+    } 
+
     CommonGet("products", "")
       .then((res) => res.json())
       .then((json) => {
@@ -99,10 +77,8 @@ class AddProduct extends Component {
         this.setState({
           productList: json,
         });
-      })
-      .then(() => {
-        this.jqueryScripts();
       });
+
     CommonGet("categories", "")
       .then((res) => res.json())
       .then((json) => {
@@ -110,10 +86,8 @@ class AddProduct extends Component {
         this.setState({
           categoryList: json,
         });
-      })
-      .then(() => {
-        this.jqueryScripts();
       });
+
     CommonGet("paymentmethods", "")
       .then((res) => res.json())
       .then((json) => {
@@ -128,28 +102,49 @@ class AddProduct extends Component {
   }
 
   componentDidMount() {
-    // this.jqueryScripts();
-    // $("#example").DataTable().destroy();
-
     window.scrollTo(0, 0);
   }
 
-  componentDidUpdate() {
-    // CommonGet("products", "")
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     this.setState({
-    //       productList: json,
-    //     });
-    //   })
-    //   .then(() => {
+  componentDidUpdate() {}
 
-       // this.jqueryScripts();
-      // });
-  }
+  renderPopupModal = () => {
+    Swal.fire({
+      title: "Enter Peticash amount",
+      input: "number",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      showLoaderOnConfirm: true,
+      preConfirm: (name) => {
+        let formdata = {
+          peticashamount: name,
+        };
 
-
-
+        CommonPost("peticash", formdata)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            Swal.fire({
+              position: "bottom",
+              //icon: 'success',
+              title: `${json.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: `${result.value.login}'s avatar`,
+          imageUrl: result.value.avatar_url,
+        });
+      }
+    });
+  };
 
   addProduct = () => {
     var itemTotal = this.state.price * this.state.qty;
@@ -184,6 +179,7 @@ class AddProduct extends Component {
       id: this.state.id + 1,
       isEdit: false,
     });
+    $("#example").DataTable().destroy();
 
     this.resetHandler();
   };
@@ -230,9 +226,15 @@ class AddProduct extends Component {
   };
   productChange = (e) => {
     let index = e.nativeEvent.target.selectedIndex;
+    let qtyLeft = this.state.filteredProductList.filter(
+      (item) => item.Id == e.target.value
+    );
+
     this.setState({
       productId: e.target.value,
       productName: e.nativeEvent.target[index].text,
+      qtyLeft: qtyLeft[0].Quantity,
+      price: qtyLeft[0].SellingPrice,
     });
   };
 
@@ -298,7 +300,7 @@ class AddProduct extends Component {
                 <td>{item.Price}</td>
                 <td>{item.Qty}</td>
                 <td>{item.Discount}%</td>
-                <td style={{textAlign:'end'}}>{itemTotal - itemDiscount}</td>
+                <td style={{ textAlign: "end" }}>{itemTotal - itemDiscount}</td>
               </tr>
             );
           });
@@ -322,23 +324,31 @@ class AddProduct extends Component {
             </tr>
           </thead>
           <tbody>{tableContent}</tbody>
-          <br/><br/>
+          <br />
+          <br />
           <tfoot>
-            
             <tr>
+              <br />
+              <br />
               <td colSpan="4"></td>
-              <td><strong>Total Price : </strong></td>
-              <td style={{textAlign:'end'}}>{this.state.totalPrice}</td>
+              <td>
+                <strong>Total Price : </strong>
+              </td>
+              <td style={{ textAlign: "end" }}>{this.state.totalPrice}</td>
             </tr>
             <tr>
               <td colSpan="4"></td>
-              <td><strong>Advance : </strong></td>
-              <td style={{textAlign:'end'}}>{this.state.advance}</td>
+              <td>
+                <strong>Advance : </strong>
+              </td>
+              <td style={{ textAlign: "end" }}>{this.state.advance}</td>
             </tr>
             <tr>
               <td colSpan="4"></td>
-              <td><strong>Amount Due : </strong></td>
-              <td style={{textAlign:'end'}}>{this.state.totalAmoutDue}</td>
+              <td>
+                <strong>Amount Due : </strong>
+              </td>
+              <td style={{ textAlign: "end" }}>{this.state.totalAmoutDue}</td>
             </tr>
           </tfoot>
         </table>
@@ -357,7 +367,7 @@ class AddProduct extends Component {
             let itemDiscount = (itemTotal * item.Discount) / 100;
             return (
               <tr key={item.id}>
-                <td>{item.CategoryName}</td>
+                {/* <td>{item.CategoryName}</td> */}
                 <td>{item.ProductName}</td>
                 <td>{item.Description}</td>
                 <td>{item.Price}</td>
@@ -365,7 +375,7 @@ class AddProduct extends Component {
                 <td>{item.Discount}%</td>
                 <td>{itemTotal - itemDiscount}</td>
                 <td>{item.WorkDoneBy}</td>
-                <td>{item.Commission}</td>
+                {/* <td>{item.Commission}</td> */}
 
                 <td>
                   {" "}
@@ -395,7 +405,7 @@ class AddProduct extends Component {
         <Table className="table-striped table-bordered hover" id="example">
           <thead>
             <tr>
-              <th>Product Category</th>
+              {/* <th>Product Category</th> */}
               <th>Product Name</th>
               <th>Description</th>
               <th>Price</th>
@@ -403,7 +413,7 @@ class AddProduct extends Component {
               <th>Discount</th>
               <th>Item Total</th>
               <th>WDB</th>
-              <th>Commission</th>
+              {/* <th>Commission</th> */}
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -428,7 +438,7 @@ class AddProduct extends Component {
       workDoneBy: "",
       discount: "",
       productId: -1,
-      categoryId: -1
+      categoryId: -1,
     });
   };
 
@@ -439,37 +449,67 @@ class AddProduct extends Component {
       totalAmoutDue: totalAmoutDue,
     });
   };
+  formValidations = () => {
+    let isValid = true;
+    let message = "";
+
+    if (this.state.customerName == "") {
+      isValid = false;
+      message = "Please enter customer name";
+    }
+    if (this.state.phoneNumber == "") {
+      isValid = false;
+      message = "Please enter phone number";
+    }
+    if (this.state.itemList.length <= 0) {
+      isValid = false;
+      message = "No products in order!";
+    }
+    if (this.state.paymentMethodId == "") {
+      isValid = false;
+      message = "Please enter payment method";
+    }
+    let valid = {
+      isValid: isValid,
+      message: message,
+    };
+    return valid;
+  };
 
   searchAndPrint = () => {
-    let isdone = (this.state.totalAmoutDue = 0 ? true : false);
-    let formdata = {
-      CustomerName: this.state.customerName,
-      PhoneNumber: this.state.phoneNumber,
-      Orders: this.state.itemList,
-      IsCompleted: false,
-      CompletedDate: null,
-      UserId: 1,
-      PaymentMethodId: this.state.paymentMethodId,
-      Advance: this.state.advance,
-      AmountDue: this.state.totalAmoutDue,
-      TotalAmount: this.state.totalPrice,
-      // IsDone : isdone
-    };
-    console.log(formdata);
-    CommonPost("orders", formdata)
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        Swal.fire({
-          position: "bottom",
-          //icon: 'success',
-          title: `${json.message}`,
-          showConfirmButton: false,
-          timer: 1500,
+    let isValid = this.formValidations();
+    console.log(isValid, "asdsads");
+    if (isValid.isValid) {
+      // let isdone = (this.state.totalAmoutDue == 0 ? true : false);
+      let formdata = {
+        CustomerName: this.state.customerName,
+        PhoneNumber: this.state.phoneNumber,
+        Orders: this.state.itemList,
+        IsCompleted: false,
+        CompletedDate: null,
+        UserId: 1,
+        PaymentMethodId: this.state.paymentMethodId,
+        Advance: this.state.advance,
+        AmountDue: this.state.totalAmoutDue,
+        TotalAmount: this.state.totalPrice,
+        // IsDone : isdone
+      };
+      CommonPost("orders", formdata)
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          Swal.fire({
+            position: "bottom",
+            //icon: 'success',
+            title: `${json.message}`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         });
-      });
-    console.log(formdata);
-    this.printHandler();
+      this.printHandler();
+    } else {
+      Swal.fire(`${isValid.message}`);
+    }
   };
 
   //printhandler******************************************************
@@ -492,10 +532,14 @@ class AddProduct extends Component {
         moment(this.state.toDate).format("YYYY-MM-DD") +
         "</strong><br/>"
     );
-    mywindow.document.write("Customer Name: "+this.state.customerName+"<br/>");
-    mywindow.document.write("Phone Number : "+this.state.phoneNumber+"<br/>");
-    mywindow.document.write("OrderNo: "+this.state.orderNumber+" <br/>");
-    mywindow.document.write("Issued By:"+this.state.loginUser +"");
+    mywindow.document.write(
+      "Customer Name: " + this.state.customerName + "<br/>"
+    );
+    mywindow.document.write(
+      "Phone Number : " + this.state.phoneNumber + "<br/>"
+    );
+    mywindow.document.write("OrderNo: " + this.state.orderNumber + " <br/>");
+    mywindow.document.write("Issued By:" + this.state.loginUser + "");
     mywindow.document.write("<br/><br/><br/>");
     mywindow.document.write("<div>");
     mywindow.document.write(document.getElementById("printContent").innerHTML);
@@ -592,13 +636,25 @@ class AddProduct extends Component {
     );
   };
 
+  qtyChange = (e) => {
+    if (this.state.qtyLeft >= e.target.value) {
+      this.setState({
+        qty: e.target.value,
+      });
+    } else {
+      Swal.fire(`Please Check the Qty!`);
+    }
+  };
+
   render() {
     let imageURL = this.state.base64string;
     let table = this.renderDisplayTable(this.state.itemList);
     let printContent = this.renderPrintValues(this.state.itemList);
     let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     let productdrop = this.renderProductDrop(this.state.filteredProductList);
-    let paymentmethoddrop = this.renderPaymentMethodDrop(this.state.paymentmethods);
+    let paymentmethoddrop = this.renderPaymentMethodDrop(
+      this.state.paymentmethods
+    );
 
     // categoryDropDown = this.categoryDropDownList()
     return (
@@ -618,6 +674,21 @@ class AddProduct extends Component {
             </div>
           </div>
           <div className="col-md-9">
+            <div className="row">
+              <div
+                className="col-md-12"
+                style={{ backgroundColor: "#293846", color: "white" }}
+              >
+                <br />
+                <div className="form-group">
+                  <label>
+                    <strong>
+                      Current Balance : {this.state.currentbalance}
+                    </strong>
+                  </label>
+                </div>
+              </div>
+            </div>
             <section>
               <div className="container">
                 <div className="row">
@@ -727,7 +798,8 @@ class AddProduct extends Component {
                         <div className="col-md-3">
                           <div className="form-group">
                             <label>
-                              <strong>Qty</strong>
+                              <strong>Qty</strong> Remaining qty :{" "}
+                              {this.state.qtyLeft}
                             </label>
 
                             <input
@@ -738,9 +810,7 @@ class AddProduct extends Component {
                               placeholder="Qty"
                               required="required"
                               value={this.state.qty}
-                              onChange={(e) =>
-                                this.setState({ qty: e.target.value })
-                              }
+                              onChange={(e) => this.qtyChange(e)}
                               data-error="Price is required."
                             />
                             <div className="help-block with-errors" />
@@ -760,6 +830,7 @@ class AddProduct extends Component {
                               placeholder="Price"
                               required="required"
                               value={this.state.price}
+                              disabled
                               onChange={(e) =>
                                 this.setState({ price: e.target.value })
                               }
@@ -826,8 +897,8 @@ class AddProduct extends Component {
                               onChange={(e) => this.commissionTypeChange(e)}
                             >
                               <option value="-1">Commission %</option>{" "}
-                              <option value="1">5%</option>
-                              <option value="2">15%</option>
+                              {/* <option value="1">5%</option>
+                              <option value="2">15%</option> */}
                               <option value="3">Other</option>
                             </select>
                           </div>
@@ -866,7 +937,7 @@ class AddProduct extends Component {
                             UPDATE ITEM
                           </button>
                         </div>
-                        <div className="col-md-3" hidden={!this.state.isEdit}>
+                        {/* <div className="col-md-3" hidden={!this.state.isEdit}>
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -874,11 +945,8 @@ class AddProduct extends Component {
                           >
                             RESET
                           </button>
-                        </div>
-                        <div
-                          className="col-md-3
-                        "
-                        >
+                        </div> */}
+                        <div className="col-md-3" hidden={this.state.isEdit}>
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -943,8 +1011,7 @@ class AddProduct extends Component {
                               required="required"
                               value={this.state.totalAmoutDue}
                               disabled
-                              onChange={(e) => (e) =>
-                                this.totalAmuntDueChange(e)}
+                              // onChange={(e) => this.totalAmuntDueChange(e)}
                               data-error="Price is required."
                             />
                           </div>

@@ -109,7 +109,6 @@ class editorder extends Component {
     CommonGetById("orders", orderId)
       .then((res) => res.json())
       .then((json) => {
-        console.log("GG" + json);
         this.setState({
           order: json,
           shippingAddress: json.shippingAddress,

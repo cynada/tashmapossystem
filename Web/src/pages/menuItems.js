@@ -20,7 +20,7 @@ export const menuItems = [
     },
     {
       id: 4,
-      label: "View Sales",
+      label: "Reports",
       icon: "fas fa-battery-half",
       link: "/admin-viewsales",
     },

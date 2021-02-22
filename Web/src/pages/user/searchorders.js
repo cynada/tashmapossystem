@@ -20,37 +20,8 @@ import {
 } from "../../config";
 import $ from "jquery";
 import DataTable from "datatables";
+import {menuItems} from "../menuItemsUser";
 
-const menuItems = [
-    {
-        id: 1,
-        label: "New Order",
-        icon: "fas fa-battery-half",
-        link: "/user-addorder",
-        items: [
-          { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-          { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-        ],
-      },
-      {
-        id: 2,
-        label: "Search Orders",
-        icon: "fas fa-battery-half",
-        link: "/user-vieworders",
-      },
-      {
-        id: 3,
-        label: "View Sales",
-        icon: "fas fa-battery-half",
-        link: "/admin-viewsales",
-      },
-      {
-        id: 4,
-        label: "Log Out",
-        icon: "fas fa-battery-half",
-        link: "/admin-login",
-      },
-];
 const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
