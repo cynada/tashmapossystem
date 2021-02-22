@@ -17,16 +17,16 @@ import 'sweetalert2/src/sweetalert2.scss'
 
 class Root extends React.Component {
     render() {
-      const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-      const store= createStore(rootReducer,composeEnhancers(applyMiddleware(thunk)));
+      // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+      // const store= createStore(rootReducer,composeEnhancers(applyMiddleware(thunk)));
         return(
-              <Provider  store={store}>
+            //   <Provider  store={store}>
                 <BrowserRouter>
                    <Switch>
                       <Route path="/" component={App} />
                    </Switch>
                 </BrowserRouter>
-             </Provider>
+            //  </Provider>
           );
        }
    }

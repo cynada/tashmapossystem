@@ -20,37 +20,8 @@ import DataTable from "datatables";
 import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 import moment from "moment";
+import {menuItems} from "../menuItemsUser";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "New Order",
-    icon: "fas fa-battery-half",
-    link: "/user-addorder",
-    items: [
-      { id: 11, label: "Item 1.1", icon: "fas fa-car", link: "/item11" },
-      { id: 12, label: "Item 1.2", icon: "fas fa-bullhorn", link: "/item12" },
-    ],
-  },
-  {
-    id: 2,
-    label: "Search Orders",
-    icon: "fas fa-battery-half",
-    link: "/user-searchorder",
-  },
-  {
-    id: 3,
-    label: "View Sales",
-    icon: "fas fa-battery-half",
-    link: "/admin-viewsales",
-  },
-  {
-    id: 4,
-    label: "Log Out",
-    icon: "fas fa-battery-half",
-    link: "/admin-login",
-  },
-];
 const NavLink = (props) => (
   <a href={props.to} {...props}>
     <i className={`fa ${props.icon}`} />
@@ -94,6 +65,11 @@ class AddProduct extends Component {
   };
 
   componentWillMount() {
+    let peticash = sessionStorage.getItem("peticash");
+    if(peticash == null || peticash == undefined){
+        this.renderPopupModal();
+    } 
+
     CommonGet("products", "")
       .then((res) => res.json())
       .then((json) => {
@@ -130,6 +106,45 @@ class AddProduct extends Component {
   }
 
   componentDidUpdate() {}
+
+  renderPopupModal = () => {
+    Swal.fire({
+      title: "Enter Peticash amount",
+      input: "number",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      showLoaderOnConfirm: true,
+      preConfirm: (name) => {
+        let formdata = {
+          peticashamount: name,
+        };
+
+        CommonPost("peticash", formdata)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            Swal.fire({
+              position: "bottom",
+              //icon: 'success',
+              title: `${json.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: `${result.value.login}'s avatar`,
+          imageUrl: result.value.avatar_url,
+        });
+      }
+    });
+  };
 
   addProduct = () => {
     var itemTotal = this.state.price * this.state.qty;
