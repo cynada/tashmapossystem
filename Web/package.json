@@ -36,7 +36,7 @@
     "react-typed": "^1.2.0",
     "reactstrap": "^8.7.1",
     "save": "^2.4.0",
-    "sweetalert2": "^10.10.4"
+    "sweetalert2": "^10.15.5"
   },
   "scripts": {
     "start": "webpack-dev-server --open --mode development",

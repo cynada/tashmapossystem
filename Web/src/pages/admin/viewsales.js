@@ -39,7 +39,7 @@ class viewsales extends Component {
       ],
       datasets: [
         {
-          label: "2020 Completed Orders",
+          label: "Completed Orders",
           backgroundColor: "rgba(22, 160, 152,1)",
           //borderColor: "rgba(255,99,132,1)",
           borderWidth: 1,
@@ -48,7 +48,7 @@ class viewsales extends Component {
           data: [10, 20, 30, 40, 50, 40, 20, 35, 10, 80, 10, 50],
         },
         {
-          label: "2020 Received Orders",
+          label: "Received Orders",
           backgroundColor: "rgba(255,99,132,1)",
           //borderColor: "rgba(255,99,132,1)",
           borderWidth: 1,
@@ -93,7 +93,7 @@ class viewsales extends Component {
                     </div><br/><br/>
                     <DropdownButton as={ButtonGroup} title="Reports" id="bg-vertical-dropdown-2" >
     <Dropdown.Item eventKey="1">Daily Status Report</Dropdown.Item>
-    <Dropdown.Item eventKey="2">Monthly Commission Report</Dropdown.Item>
+    <Dropdown.Item eventKey="2"  href="/admin-commissionreport">User Commission Report</Dropdown.Item>
 
   </DropdownButton>
   <br/><br/><br/><br/><br/>
