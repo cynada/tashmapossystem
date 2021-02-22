@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+
 router.get("/:id", async (req, res) => {
   try {
     var order;
@@ -37,6 +38,7 @@ router.get("/:id", async (req, res) => {
           PaymentMethodName: results[0][0].PaymentMethodName,
           AdvancePayment: results[0][0].AdvancePayment,
           AmountDue: results[0][0].AmountDue,
+          IsDone: results[0][0].IsDone,
           IsCompleted: results[0][0].IsCompleted,
           CreatedDate: results[0][0].CreatedDate,
           CustomerId: results[0][0].CustomerId,
@@ -83,6 +85,25 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/get-order-by-daterange", async (req, res) => {
+  try {
+    mysqlConnection.query(
+      `CALL GetOrderbyDateRange('${req.body.startDate}', '${req.body.endDate}');`,
+      (error, results, fields) => {
+        if (error) {
+          return mysqlConnection.rollback(() => {
+            throw error;
+          });
+        }
+        var orders = results;
+        res.send(orders[0]);
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err.message);
+  }
+});
 router.post("/", async (req, res) => {
   try {
     var CustomerName = req.body.CustomerName;
@@ -179,6 +200,39 @@ router.post("/complete", async (req, res) => {
       }
       mysqlConnection.query(
         `CALL CompleteOrder(${OrderId});`,
+        (error, results, fields) => {
+          if (error) {
+            return mysqlConnection.rollback(() => {
+              throw error;
+            });
+          }
+        }
+      );
+      mysqlConnection.commit((err) => {
+        if (err) {
+          return mysqlConnection.rollback(() => {
+            throw err;
+          });
+        }
+        console.log("success!");
+        res.send({ message: "Order Completed." });
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err.message);
+  }
+});
+router.post("/work-done", async (req, res) => {
+  try {
+    var OrderId = req.body.OrderId;
+    // console.log(OrderId);
+    mysqlConnection.beginTransaction((err) => {
+      if (err) {
+        throw err;
+      }
+      mysqlConnection.query(
+        `CALL WorkDoneOrder(${OrderId});`,
         (error, results, fields) => {
           if (error) {
             return mysqlConnection.rollback(() => {

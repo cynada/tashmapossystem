@@ -30,13 +30,14 @@ router.post("/", async (req, res) => {
     var BuyingPrice = req.body.BuyingPrice;
     var SellingPrice = req.body.SellingPrice;
     var Quantity = req.body.Quantity;
+    var Commission = req.body.Commission;
 
     mysqlConnection.beginTransaction((err) => {
       if (err) {
         throw err;
       }
       mysqlConnection.query(
-        `CALL CreateProduct(${CategoryId},'${Name}','${Description}',${BuyingPrice},${SellingPrice},${Quantity});`,
+        `CALL CreateProduct(${CategoryId},'${Name}','${Description}',${BuyingPrice},${SellingPrice},${Quantity},${Commission});`,
         (error, results, fields) => {
           if (error) {
             return mysqlConnection.rollback(() => {

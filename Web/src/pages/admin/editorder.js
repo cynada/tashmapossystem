@@ -234,6 +234,7 @@ class editorder extends Component {
   //UPDATE THE PRODUCT
 
   editProduct = () => {
+    if(this.state.order.IsCompleted){
     let formdata = {
       OrderId: this.state.orderId,
     };
@@ -249,6 +250,24 @@ class editorder extends Component {
         timer: 1500,
       });
     });
+  }
+  else if(this.state.order.IsDone){
+    let formdata = {
+      OrderId: this.state.orderId,
+    };
+    CommonPost("orders/work-done", formdata)
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json);
+      Swal.fire({
+        position: "bottom",
+        //icon: 'success',
+        title: `${json.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
+  }
   };
 
   /******************************************************MAIN RENDER**********************************88 */

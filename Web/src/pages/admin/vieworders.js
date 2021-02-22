@@ -16,6 +16,7 @@ import {
   CommonPost,
   CommonDeleteById,
   CommonGetById,
+  CommonGetByParams,
 } from "../../config";
 import $ from "jquery";
 import DataTable from "datatables";
@@ -49,8 +50,26 @@ class vieworders extends Component {
     super(props);
   }
 
-  componentWillMount() {
-    CommonGet("orders", "")
+  componentWillMount() {}
+
+  jqueryScripts = () => {
+    $(document).ready(function () {
+      $("#example").DataTable();
+    });
+  };
+
+  searchItem = () => {
+    let startDate = this.state.startDate;
+    let endDate = this.state.endDate;
+    let formData = {
+      startDate: `${startDate.getFullYear()}/${
+        startDate.getMonth() + 1
+      }/${startDate.getDate()}`,
+      endDate: `${endDate.getFullYear()}/${
+        endDate.getMonth() + 1
+      }/${endDate.getDate()}`,
+    };
+    CommonPost("orders/get-order-by-daterange", formData)
       .then((res) => res.json())
       .then((json) => {
         this.setState({
@@ -60,31 +79,11 @@ class vieworders extends Component {
       .then(() => {
         this.jqueryScripts();
       });
-  }
-
-  jqueryScripts = () => {
-    $(document).ready(function () {
-      $("#example").DataTable();
-    });
   };
 
   modalOpen = (id) => {
     sessionStorage.setItem("order", id);
     this.props.history.push("./admin-editorder");
-    //window.alert(id);
-    // CommonGetById("orders", id)
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     console.log("GG" + json);
-    //     this.setState({
-    //       order: json,
-    //     });
-    //   })
-    //   .then(() => {
-    //     this.setState({
-    //       isModalOpen: true,
-    //     });
-    //   });
   };
   renderDisplay = (contetnts) => {
     let tableContent =
@@ -96,9 +95,9 @@ class vieworders extends Component {
             let IsDone = item.IsDone == 1 ? "Yes" : "No";
             return (
               <tr key={item.OrderId}>
+                <td>{item.OrderId}</td>
                 <td>{item.CustomerName}</td>
                 <td>{item.PhoneNumber}</td>
-                <td>{item.OrderId}</td>
                 <td>{moment(item.CreatedDate).format("DD-MM-YYYY")}</td>
                 <td>{item.OrderTotal}</td>
                 <td>
@@ -127,9 +126,9 @@ class vieworders extends Component {
         <Table striped bordered hover id="example">
           <thead>
             <tr>
+              <th>Order Id</th>
               <th>Customer Name</th>
               <th>Phone Number</th>
-              <th>Order Id</th>
               <th>Order Date</th>
               <th>Total Price</th>
               <th>Order Details</th>
@@ -228,7 +227,7 @@ class vieworders extends Component {
                             type="button"
                             className="btn btn-primary"
                             hidden={this.state.isDisable}
-                            onClick={this.addProduct}
+                            onClick={this.searchItem}
                           >
                             SEARCH ITEM
                           </button>
