@@ -172,6 +172,7 @@ class AddProduct extends Component {
       BuyingPrice: this.state.price,
       SellingPrice: this.state.sellingPrice,
       Quantity: this.state.qty,
+      Commission: this.state.commission,
     };
     console.log(formdata);
     CommonPost("products", formdata)
