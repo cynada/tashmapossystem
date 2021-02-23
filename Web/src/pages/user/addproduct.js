@@ -235,6 +235,7 @@ class AddProduct extends Component {
       productName: e.nativeEvent.target[index].text,
       qtyLeft: qtyLeft[0].Quantity,
       price: qtyLeft[0].SellingPrice,
+      commission:qtyLeft[0].Commission
     });
   };
 
@@ -348,7 +349,7 @@ class AddProduct extends Component {
               <td>
                 <strong>Amount Due : </strong>
               </td>
-              <td style={{ textAlign: "end" }}>{this.state.totalAmoutDue}</td>
+              <td style={{ textAlign: "end" }}>{this.state.totalAmountDue}</td>
             </tr>
           </tfoot>
         </table>
@@ -480,7 +481,7 @@ class AddProduct extends Component {
     let isValid = this.formValidations();
     console.log(isValid, "asdsads");
     if (isValid.isValid) {
-      // let isdone = (this.state.totalAmoutDue == 0 ? true : false);
+      // let isdone = (this.state.totalAmountDue == 0 ? true : false);
       let formdata = {
         CustomerName: this.state.customerName,
         PhoneNumber: this.state.phoneNumber,
@@ -490,7 +491,7 @@ class AddProduct extends Component {
         UserId: 1,
         PaymentMethodId: this.state.paymentMethodId,
         Advance: this.state.advance,
-        AmountDue: this.state.totalAmoutDue,
+        AmountDue: this.state.totalAmountDue,
         TotalAmount: this.state.totalPrice,
         // IsDone : isdone
       };
