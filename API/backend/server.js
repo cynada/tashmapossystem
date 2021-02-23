@@ -8,6 +8,7 @@ import categoryRoute from "./routes/categoryRoute";
 import productRoute from "./routes/productRoute";
 import paymentMethodRoute from "./routes/paymentMethodRoute";
 import commissionRoute from "./routes/commissionRoute";
+import salesRoute from "./routes/salesRoute";
 
 const app = express();
 app.use(cors());
@@ -44,6 +45,8 @@ app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
 app.use("/api/paymentmethods", paymentMethodRoute);
 app.use("/api/commissions", commissionRoute);
+app.use("/api/sales", salesRoute);
+
 
 app.listen(config.PORT, () => {
   console.log("Server started at http://localhost:5000");

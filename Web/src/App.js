@@ -50,38 +50,24 @@ class App extends React.Component {
   // UNSAFE_componentWillMount() {
   //   this.props.getProducts();
   // }
-  // getUrl(pathname) {
-  //   let pathArray = pathname.split("/");
-  //   return `/${pathArray[1]}` === "/coming-soon"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/maintenance"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/page-not-found"
-  //     ? true /*: `/${pathArray[1]}` === '/admin-login' ? true*/
-  //     : `/${pathArray[1]}` === "/admin-addproducts"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/admin-adduser"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/admin-vieworders"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/admin-editorder"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/admin-viewsales"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/searchorder"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/user-vieworders"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/user-addorder"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/user-searchorders"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/admin-commissionreport"
-  //     ? true
-  //     : `/${pathArray[1]}` === "/user-resetpassword"
-  //     ? true
-  //     : false;
-  // }
+  getUrl(pathname) {
+    let pathArray = pathname.split("/");
+    return `/${pathArray[1]}` === "/admin-addproducts"
+      ? true
+      : `/${pathArray[1]}` === "/admin-vieworders"
+      ? true
+      : `/${pathArray[1]}` === "/admin-editorder"
+      ? true /*: `/${pathArray[1]}` === '/admin-login' ? true*/
+      : `/${pathArray[1]}` === "/admin-viewsales"
+      ? true
+      : `/${pathArray[1]}` === "/admin-adduser"
+      ? true
+      : `/${pathArray[1]}` === "/admin-editorder"
+      ? true /*: `/${pathArray[1]}` === '/admin-login' ? true*/
+      : `/${pathArray[1]}` === "/admin-commissionreport"
+      ? true
+      : false;
+  }
   // setHeader(pathname) {
   //   let pathArray = pathname.split("/");
   //   return `/${pathArray[1]}` === "/index2"
@@ -97,10 +83,12 @@ class App extends React.Component {
   //     : false;
   // }
   render() {
-  
+    let adminUser = sessionStorage.getItem("IsAdmin");
+
     return (
       <Fragment>
-      
+       {
+             adminUser == "RANILTASHMA" ?
             <Switch>
               <Route path="/maintenance" component={Maintenance} />
               {/* Admin */}
@@ -109,6 +97,7 @@ class App extends React.Component {
               <Route path="/admin-vieworders" component={ViewOrders} />
               <Route path="/admin-editorder" component={EditOrder} />
               <Route path="/admin-viewsales" component={ViewSales} />
+              <Route path="/admin-resetpassword" component={ResetPassword} />
 
               {/* AddUser */}
 
@@ -117,19 +106,20 @@ class App extends React.Component {
               {/* Reports */}
 
               <Route path="/admin-commissionreport" component={CommissionReport} />
-
+              </Switch>
+              :
+              <Switch>
               {/* USER */}
               <Route path="/searchorder" component={SearchOrder} />
               <Route path="/user-addorder" component={AddOrder} />
               <Route path="/user-vieworders" component={SingleOrder} />
               <Route path="/user-searchorders" component={SearchOrders} />
-              <Route path="/user-resetpassword" component={ResetPassword} />
               <Route path="/user-newpayment" component={NewPayment} />
 
               <Route path="/" component={Login} />
 
             </Switch>
-        
+         }
       </Fragment>
     );
   }

@@ -28,7 +28,7 @@ export const menuItems = [
       id: 5,
       label: "Reset Password",
       icon: "fas fa-battery-half",
-      link: "/user-resetpassword",
+      link: "/admin-resetpassword",
     },
     {
       id: 6,
