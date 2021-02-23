@@ -71,9 +71,7 @@ class AddProduct extends Component {
           productList: json,
         });
       })
-      .then(() => {
-        this.jqueryScripts();
-      });
+     
     CommonGet("categories", "")
       .then((res) => res.json())
       .then((json) => {

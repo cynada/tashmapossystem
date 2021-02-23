@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for POS in Tashma Studio",
   "main": "index.js",
+  "type": "module",
   "dependencies": {
     "aws-sdk": "^2.702.0",
     "bcrypt": "^5.0.0",
