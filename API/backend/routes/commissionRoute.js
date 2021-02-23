@@ -4,6 +4,22 @@ import mysqlConnection from "../mysql";
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  try {
+    mysqlConnection.query(`CALL GetAllCommissons();`, (error, results, fields) => {
+      if (error) {
+        return mysqlConnection.rollback(() => {
+          throw error;
+        });
+      }
+      res.send(results[0]);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err.message);
+  }
+});
+
 router.post("/usercommission", async (req, res) => {
   try {
     var epfnumber = req.body.epfnumber;
