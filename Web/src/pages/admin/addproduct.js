@@ -19,7 +19,7 @@ import $ from "jquery";
 import DataTable from "datatables";
 import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
-import {menuItems} from "../menuItems";
+import { menuItems } from "../menuItems";
 
 const NavLink = (props) => (
   <a href={props.to} {...props}>
@@ -38,7 +38,7 @@ class AddProduct extends Component {
       description: "",
       categoryId: -1,
       sellingPrice: "",
-      qty:"",
+      qty: "",
       category: "",
       brand: "",
       editProductId: "",
@@ -168,7 +168,7 @@ class AddProduct extends Component {
     let formdata = {
       CategoryId: this.state.categoryId,
       Name: this.state.productName,
-      Description:this.state.description,
+      Description: this.state.description,
       BuyingPrice: this.state.price,
       SellingPrice: this.state.sellingPrice,
       Quantity: this.state.qty,
@@ -282,7 +282,6 @@ class AddProduct extends Component {
                 <td>{item.SellingPrice}</td>
                 <td>{item.Description}</td>
 
-                
                 <td>
                   {" "}
                   <button
@@ -429,7 +428,9 @@ class AddProduct extends Component {
       cate == null || cate == undefined
         ? null
         : cate.map((item) => (
-            <option key={item.Id} value={item.Id}>{item.CategoryName}</option>
+            <option key={item.Id} value={item.Id}>
+              {item.CategoryName}
+            </option>
           ));
 
     return (
@@ -438,7 +439,9 @@ class AddProduct extends Component {
         className="form-control"
         onChange={(e) => this.categoryChange(e)}
       >
-        <option key = "-1" value="-1">Please select a category</option>
+        <option key="-1" value="-1">
+          Please select a category
+        </option>
         {optionItems}
       </select>
     );
@@ -631,8 +634,8 @@ class AddProduct extends Component {
                         </div>
                       </div>
                       <div className="row">
-                      <div className="col-md-3">
-                      <div className="form-group">
+                        <div className="col-md-3">
+                          <div className="form-group">
                             <label>
                               <strong>Commission %</strong>
                             </label>
@@ -648,8 +651,8 @@ class AddProduct extends Component {
                               placeholder="Commission"
                             />
                           </div>
-                          </div>
                         </div>
+                      </div>
                       {/* <div className="row">
                         <div className="col-md-6">
                           <Form.Group controlId="formBasicEmail">
