@@ -68,7 +68,7 @@ class Login extends Component {
             showConfirmButton: false,
             timer: 1500,
           });
-          
+          sessionStorage.setItem("IsAdmin","RANILTASHMA");
           console.log("LOGGEDIN!");
           this.props.history.push("/admin-vieworders");
         }
