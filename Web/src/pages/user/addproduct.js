@@ -119,10 +119,12 @@ class AddProduct extends Component {
       showLoaderOnConfirm: true,
       preConfirm: (name) => {
         let formdata = {
-          peticashamount: name,
+          amount: name,
+          ispettycash:1,
+          createdBy:1
         };
-
-        CommonPost("peticash", formdata)
+        sessionStorage.setItem("PCash",name)
+        CommonPost("cashier", formdata)
           .then((res) => res.json())
           .then((json) => {
             console.log(json);
@@ -133,6 +135,9 @@ class AddProduct extends Component {
               showConfirmButton: false,
               timer: 1500,
             });
+            this.setState({
+              currentbalance:name
+            })
           })
       },
       allowOutsideClick: () => !Swal.isLoading(),
@@ -495,6 +500,10 @@ class AddProduct extends Component {
         TotalAmount: this.state.totalPrice,
         // IsDone : isdone
       };
+      let datedata = {
+        date : moment().format("YYYY-MM-DD")
+      }
+      console.log(datedata,"datedatadatedata");
       CommonPost("orders", formdata)
         .then((res) => res.json())
         .then((json) => {
@@ -506,7 +515,17 @@ class AddProduct extends Component {
             showConfirmButton: false,
             timer: 1500,
           });
-        });
+        }).then(()=> {
+          CommonPost("cashier/getcashierdetails", datedata)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            // this.setState({
+            //   currentbalance:js
+            // })
+          });
+        })
+        
       this.printHandler();
     } else {
       Swal.fire(`${isValid.message}`);

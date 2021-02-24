@@ -9,6 +9,7 @@ import productRoute from "./routes/productRoute";
 import paymentMethodRoute from "./routes/paymentMethodRoute";
 import commissionRoute from "./routes/commissionRoute";
 import salesRoute from "./routes/salesRoute";
+import cashierRoute from "./routes//cashierRoute";
 
 const app = express();
 app.use(cors());
@@ -46,6 +47,8 @@ app.use("/api/products", productRoute);
 app.use("/api/paymentmethods", paymentMethodRoute);
 app.use("/api/commissions", commissionRoute);
 app.use("/api/sales", salesRoute);
+app.use("/api/cashier", cashierRoute);
+
 
 
 app.listen(config.PORT, () => {
