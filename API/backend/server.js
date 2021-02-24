@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import config from "./config";
-import userRoute from "./routes/userRoute";
-import orderRoute from "./routes/orderRoute";
-import categoryRoute from "./routes/categoryRoute";
-import productRoute from "./routes/productRoute";
-import paymentMethodRoute from "./routes/paymentMethodRoute";
-import commissionRoute from "./routes/commissionRoute";
+import config from "./config.js";
+import userRoute from "./routes/userRoute.js";
+import orderRoute from "./routes/orderRoute.js";
+import categoryRoute from "./routes/categoryRoute.js";
+import productRoute from "./routes/productRoute.js";
+import paymentMethodRoute from "./routes/paymentMethodRoute.js";
+import commissionRoute from "./routes/commissionRoute.js";
 
 const app = express();
 app.use(cors());
