@@ -86,6 +86,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/get-order-by-daterange", async (req, res) => {
   try {
+    console.log(req.body)
     mysqlConnection.query(
       `CALL GetOrderbyDateRange('${req.body.startDate}', '${req.body.endDate}');`,
       (error, results, fields) => {
@@ -152,6 +153,7 @@ router.post("/", async (req, res) => {
                         });
                       }
                       var OrderId = results[0].orderId;
+                      console.log(OrderId)
                       req.body.Orders.map((item) => {
                         mysqlConnection.query(
                           `CALL InsertOrderDetailsItem(${OrderId}, ${item.CategoryId}, ${item.ProductId}, '${item.Description}', ${item.Qty}, ${item.Price}, ${item.Discount}, ${item.WorkDoneBy}, ${item.Commission}, ${User});`,
@@ -172,7 +174,7 @@ router.post("/", async (req, res) => {
                           });
                         }
                         console.log("success!");
-                        res.send({ message: "Order Created." });
+                        res.send({ message: "Order Created.", OrderId: OrderId});
                       });
                     }
                   );
@@ -247,7 +249,7 @@ router.post("/work-done", async (req, res) => {
           });
         }
         console.log("success!");
-        res.send({ message: "Order Completed." });
+        res.send({ message: "Order Edited." });
       });
     });
   } catch (err) {
