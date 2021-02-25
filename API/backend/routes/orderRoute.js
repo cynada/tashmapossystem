@@ -172,7 +172,7 @@ router.post("/", async (req, res) => {
                           });
                         }
                         console.log("success!");
-                        res.send({ message: "Order Created." });
+                        res.send({ message: "Order Created.", OrderId: OrderId});
                       });
                     }
                   );
@@ -247,7 +247,7 @@ router.post("/work-done", async (req, res) => {
           });
         }
         console.log("success!");
-        res.send({ message: "Order Completed." });
+        res.send({ message: "Order Edited." });
       });
     });
   } catch (err) {

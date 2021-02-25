@@ -1,5 +1,4 @@
 import express from "express";
-import { isAuth, isAdmin } from "../util";
 import mysqlConnection from "../mysql";
 
 const router = express.Router();

@@ -122,7 +122,7 @@ router.delete("/", async (req, res) => {
         throw err;
       }
       mysqlConnection.query(
-        `CALL DeleteUser('${UserId}');`,
+        `CALL DeleteUser(${UserId});`,
         (error, results, fields) => {
           if (error) {
             return mysqlConnection.rollback(() => {
