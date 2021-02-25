@@ -23,35 +23,20 @@ const router = express.Router();
 router.post("/getcashierdetails", async (req, res) => {
     try {
       var date = req.body.date;
-    
-      mysqlConnection.beginTransaction((err) => {
-        if (err) {
-          throw err;
+      mysqlConnection.query(`CALL GetAllCashierDetails('${date}');`, (error, results, fields) => {
+        if (error) {
+          return mysqlConnection.rollback(() => {
+            throw error;
+          });
         }
-        mysqlConnection.query(
-          `CALL GetAllCashierDetails('${date}');`,
-          (error, results, fields) => {
-            if (error) {
-              return mysqlConnection.rollback(() => {
-                throw error;
-              });
-            }
-          }
-        );
-        mysqlConnection.commit((err) => {
-          if (err) {
-            return mysqlConnection.rollback(() => {
-              throw err;
-            });
-          }
-          console.log("success!");
-          res.send({ message: "Petty Cash Updated." });
-        });
+        var orders = results;
+        res.send(orders);
       });
     } catch (err) {
       console.log(err);
       res.status(400).send(err.message);
     }
+   
   });
 
 router.post("/", async (req, res) => {
