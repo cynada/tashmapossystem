@@ -20,7 +20,7 @@ import DataTable from "datatables";
 import Swal from "sweetalert2";
 import LOGO from "../../assets/images/tashmalogo.jpg";
 import moment from "moment";
-import {menuItems} from "../menuItemsUser";
+import { menuItems } from "../menuItemsUser";
 
 const NavLink = (props) => (
   <a href={props.to} {...props}>
@@ -36,16 +36,16 @@ class AddProduct extends Component {
       commissionType: "",
       commission: 0,
       itemList: [],
-      qty: "",
+      qty: 0,
       description: "",
       itemcategory: "",
       itemName: "",
-      price: "",
-      workDoneBy: "",
-      discount: "",
-      advance: "",
-      totalPrice: "",
-      totalAmountDue: "",
+      price: 0,
+      workDoneBy: 0,
+      discount: 0,
+      advance: 0,
+      totalPrice: 0,
+      totalAmountDue: 0,
       customerName: "",
       phoneNumber: "",
       id: 0,
@@ -55,6 +55,7 @@ class AddProduct extends Component {
       orderNumber: "",
       currentbalance: 0,
       qtyLeft: 0,
+      userId:0,
     };
   }
 
@@ -66,9 +67,14 @@ class AddProduct extends Component {
 
   componentWillMount() {
     let peticash = sessionStorage.getItem("peticash");
-    if(peticash == null || peticash == undefined){
-        this.renderPopupModal();
-    } 
+    if (peticash == null || peticash == undefined) {
+      this.renderPopupModal();
+    }
+    else{
+      this.setState({
+        currentbalance:peticash
+      })
+    }
 
     CommonGet("products", "")
       .then((res) => res.json())
@@ -87,7 +93,14 @@ class AddProduct extends Component {
           categoryList: json,
         });
       });
-
+    CommonGet("users", "")
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("GG" + json);
+        this.setState({
+          userList: json,
+        });
+      });
     CommonGet("paymentmethods", "")
       .then((res) => res.json())
       .then((json) => {
@@ -120,10 +133,10 @@ class AddProduct extends Component {
       preConfirm: (name) => {
         let formdata = {
           amount: name,
-          ispettycash:1,
-          createdBy:1
+          ispettycash: 1,
+          createdBy: 1,
         };
-        sessionStorage.setItem("PCash",name)
+        sessionStorage.setItem("peticash", name);
         CommonPost("cashier", formdata)
           .then((res) => res.json())
           .then((json) => {
@@ -136,19 +149,17 @@ class AddProduct extends Component {
               timer: 1500,
             });
             this.setState({
-              currentbalance:name
-            })
-          })
+              currentbalance: name,
+            });
+          });
       },
       allowOutsideClick: () => !Swal.isLoading(),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: `${result.value.login}'s avatar`,
-          imageUrl: result.value.avatar_url,
-        });
-      }
-    });
+    })
+    // .then((result) => {
+    //   if (result.isConfirmed) {
+        
+    //   }
+    // });
   };
 
   addProduct = () => {
@@ -170,7 +181,7 @@ class AddProduct extends Component {
       Discount: this.state.discount,
       CategoryName: this.state.categoryName,
       CategoryId: this.state.categoryId,
-      WorkDoneBy: this.state.workDoneBy,
+      WorkDoneBy: this.state.userId,
       Commission: this.state.commission,
       commissionType: this.state.commissionType,
     };
@@ -240,7 +251,13 @@ class AddProduct extends Component {
       productName: e.nativeEvent.target[index].text,
       qtyLeft: qtyLeft[0].Quantity,
       price: qtyLeft[0].SellingPrice,
-      commission:qtyLeft[0].Commission
+      commission: qtyLeft[0].Commission,
+    });
+  };
+
+  userChange = (e) => {
+    this.setState({
+      userId: e.target.value,
     });
   };
 
@@ -484,9 +501,7 @@ class AddProduct extends Component {
 
   searchAndPrint = () => {
     let isValid = this.formValidations();
-    console.log(isValid, "asdsads");
     if (isValid.isValid) {
-      // let isdone = (this.state.totalAmountDue == 0 ? true : false);
       let formdata = {
         CustomerName: this.state.customerName,
         PhoneNumber: this.state.phoneNumber,
@@ -501,9 +516,9 @@ class AddProduct extends Component {
         // IsDone : isdone
       };
       let datedata = {
-        date : moment().format("YYYY-MM-DD")
-      }
-      console.log(datedata,"datedatadatedata");
+        date: moment().format("YYYY-MM-DD"),
+      };
+      console.log(datedata, "datedatadatedata");
       CommonPost("orders", formdata)
         .then((res) => res.json())
         .then((json) => {
@@ -515,18 +530,28 @@ class AddProduct extends Component {
             showConfirmButton: false,
             timer: 1500,
           });
-        }).then(()=> {
-          CommonPost("cashier/getcashierdetails", datedata)
-          .then((res) => res.json())
-          .then((json) => {
-            console.log(json);
-            // this.setState({
-            //   currentbalance:js
-            // })
-          });
         })
-        
+        .then(() => {
+          CommonPost("cashier/getcashierdetails", datedata)
+            .then((res) => res.json())
+            .then((json) => {
+              console.log(json);
+              // this.setState({
+              //   currentbalance:js
+              // })
+            });
+        });
+
       this.printHandler();
+      let inititalCashierTotal = sessionStorage.getItem("peticash");
+      let amountAdded = this.state.advance;
+      let updatedAmount = inititalCashierTotal + amountAdded;
+
+      sessionStorage.setItem("peticash",updatedAmount)
+      this.setState({
+        currentbalance:updatedAmount
+      })
+      
     } else {
       Swal.fire(`${isValid.message}`);
     }
@@ -607,7 +632,29 @@ class AddProduct extends Component {
       </select>
     );
   };
+  renderUserDrop = (prod) => {
+    let optionItems =
+      prod == null || prod == undefined
+        ? null
+        : prod.map((item) => (
+            <option key={item.EPFNumber} value={item.EPFNumber}>
+              {item.Name}
+            </option>
+          ));
 
+    return (
+      <select
+        value={this.state.userId}
+        className="form-control"
+        onChange={(e) => this.userChange(e)}
+      >
+        <option key="-1" value="-1">
+          Please select a user
+        </option>
+        {optionItems}
+      </select>
+    );
+  };
   renderProductDrop = (prod) => {
     let optionItems =
       prod == null || prod == undefined
@@ -672,6 +719,8 @@ class AddProduct extends Component {
     let printContent = this.renderPrintValues(this.state.itemList);
     let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     let productdrop = this.renderProductDrop(this.state.filteredProductList);
+    let userdrop = this.renderUserDrop(this.state.userList);
+
     let paymentmethoddrop = this.renderPaymentMethodDrop(
       this.state.paymentmethods
     );
@@ -883,25 +932,12 @@ class AddProduct extends Component {
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-md-6">
+                      <div className="col-md-6">
                           <div className="form-group">
                             <label>
                               <strong>Work Done By</strong>
                             </label>
-
-                            <select
-                              className="form-control"
-                              value={this.state.workDoneBy}
-                              onChange={(e) =>
-                                this.setState({ workDoneBy: e.target.value })
-                              }
-                            >
-                              <option value="-1">Work Done By</option>{" "}
-                              <option value="1">Ranil : EPF100</option>
-                              <option value="2">Manori : EPF101</option>
-                              <option value="3">Devja : EPF102</option>
-                              <option value="4">Kenuja : EPF103</option>
-                            </select>
+                            {userdrop}
                           </div>
                         </div>
                         <div className="col-md-3">

@@ -113,14 +113,14 @@ class App extends React.Component {
               <Route path="/searchorder" component={SearchOrder} />
               <Route path="/user-addorder" component={AddOrder} />
               <Route path="/user-vieworders" component={SingleOrder} />
-              <Route path="/user-searchorders" component={SearchOrders} />
+              <Route path="/user-searchorder" component={SearchOrders} />
               <Route path="/user-newpayment" component={NewPayment} />
 
               <Route path="/" component={Login} />
 
             </Switch>
          }
-      </Fragment>
+      </Fragment> 
     );
   }
 }

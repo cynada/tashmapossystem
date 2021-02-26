@@ -113,6 +113,7 @@ class editorder extends Component {
       contetnts === undefined
         ? null
         : contetnts.map((item) => {
+          let itemTotal = item.Price * item.Qty;
             return (
               <tr key={item.Id}>
                 <td>{item.ProductName}</td>
@@ -120,7 +121,7 @@ class editorder extends Component {
                 <td>{item.Price}</td>
                 <td className="text-right">{item.Discount}</td>
                 <td className="text-right">
-                  {item.Price * item.Qty - item.Discount}
+                  {itemTotal - (itemTotal*item.Discount/100)}
                 </td>
                 <td className="text-right">{item.WorkDoneBy}</td>
               </tr>

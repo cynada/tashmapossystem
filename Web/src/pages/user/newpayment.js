@@ -33,7 +33,8 @@ class NewPayment extends Component {
     super(props);
     this.state = {
      description:"",
-     amount:""
+     amount:"",
+     currentbalance:0
     };
   }
 
@@ -44,6 +45,12 @@ class NewPayment extends Component {
   };
 
   componentWillMount() {
+    let peticash = sessionStorage.getItem("peticash");
+    if (peticash != null || peticash != undefined) {
+      this.setState({
+        currentbalance:peticash
+      })
+    }
     
   }
 
@@ -59,6 +66,16 @@ class NewPayment extends Component {
   resetHandler = () => {
    
   };
+
+  submit = () => {
+    let initialAmount = sessionStorage.getItem("peticash");
+    let updatedAmount = initialAmount - this.state.amount;
+    this.setState({
+      currentbalance:updatedAmount
+    })
+    sessionStorage.setItem("peticash",updatedAmount);
+    Swal.fire("Payment Saved!")
+  }
 
   render() {
    
