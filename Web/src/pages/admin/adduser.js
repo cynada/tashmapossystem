@@ -34,19 +34,15 @@ class AddUser extends Component {
     this.state = {
       pictures: [],
       price: "",
-      productName: "",
+      name: "",
+      epf:"",
+      nic:"",
+      isAdmin:0,
       description: "",
-      categoryId: -1,
-      instock: "",
-      category: "",
-      brand: "",
+     
       editProductId: "",
-      base64string:
-        "https://lh3.googleusercontent.com/proxy/e0eh1T0oEXKbYGCgFPdsNigBDZqlbuNO0yaHTXYP1ASL-CoiEnZOBAw3jdywchu1E8IpEgYusbNKwHZ6UkwjsBxr9KaLpADQdGGf_2y7BG_BFTQuwf21kcNh9sM1",
-
-      editProduct: [],
-      productList: [],
-      orders: [],
+      userList:[],
+     
 
       isEdit: false,
       isDisable: false,
@@ -61,12 +57,12 @@ class AddUser extends Component {
   };
 
   componentWillMount() {
-    CommonGet("products", "")
+    CommonGet("users", "")
       .then((res) => res.json())
       .then((json) => {
         console.log("GG" + json);
         this.setState({
-          productList: json,
+          userList: json,
         });
       })
       .then(() => {
@@ -150,16 +146,16 @@ class AddUser extends Component {
   };
 
   addProduct = () => {
+  
     let formdata = {
-      name: this.state.productName,
-      description: this.state.description,
-      price: this.state.price,
-      image: this.state.base64string,
-      brand: this.state.brand,
-      countInStock: this.state.instock,
-      category: this.state.category,
+      Name: this.state.name,
+      Description: this.state.description,
+      NIC: this.state.nic,
+      EPFNumber: this.state.epf,
+      IsAdmin:0,
+     
     };
-    CommonPost("products", formdata)
+    CommonPost("users", formdata)
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
@@ -172,12 +168,12 @@ class AddUser extends Component {
         });
       })
       .then(() => {
-        CommonGet("products", "")
+        CommonGet("users", "")
           .then((res) => res.json())
           .then((json) => {
             console.log("GG" + json);
             this.setState({
-              productList: json,
+              userList: json,
             });
           })
           .then(() => {
@@ -379,9 +375,9 @@ class AddUser extends Component {
                               className="form-control"
                               placeholder="Full Name"
                               required="required"
-                              value={this.state.fullName}
+                              value={this.state.name}
                               onChange={(e) =>
-                                this.setState({ fullName: e.target.value })
+                                this.setState({ name: e.target.value })
                               }
                               data-error="Firstname is required."
                             />
