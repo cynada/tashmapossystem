@@ -86,7 +86,7 @@ height:20px;
 background-position:0 0;
 }
 
-@media only screen and (max-width: 1350px) {
+@media only screen and (max-width: 950px) {
   .screenview{
     margin-left:1px!important
  }

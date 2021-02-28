@@ -56,6 +56,7 @@ class AddProduct extends Component {
       currentbalance: 0,
       qtyLeft: 0,
       userId:0,
+      time:new Date(),
     };
   }
 
@@ -115,11 +116,14 @@ class AddProduct extends Component {
   }
 
   componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
     window.scrollTo(0, 0);
   }
 
   componentDidUpdate() {}
-
+  componentWillUnmount(){
+    clearInterval(this.interval);
+  }
   renderPopupModal = () => {
     Swal.fire({
       title: "Enter Peticash amount",
@@ -733,8 +737,27 @@ class AddProduct extends Component {
     // categoryDropDown = this.categoryDropDownList()
     return (
       <div className="page-content">
-        <div className="row">
-          <div className="col-md-3">
+      
+          {/* <div className="row">
+              <div
+                className="col-md-12"
+                style={{ backgroundColor: "#293846", color: "white"}}
+              >
+                <br />
+                <div className="form-group">
+                  <label>
+                    <strong>
+                   Current Balance : {this.state.currentbalance}
+                    </strong>
+                    <strong style={{marginLeft:'200px'}}>
+                    {moment(this.state.time).format('MMMM Do YYYY, h:mm:ss a')}
+                    </strong>
+                  </label>
+                </div>
+              </div>
+            </div> */}
+            <div className="row">
+            <div className="col-md-3">
             <div className="sidebar">
               <center>
                 <img src={LOGO} style={{ width: "250px" }} />
@@ -747,24 +770,28 @@ class AddProduct extends Component {
               />
             </div>
           </div>
-          <div className="col-md-12" style={{marginLeft:'265px'}}>
-            <div className="row">
+      
+          <div className="col-md-9">
+          <div className="row">
               <div
                 className="col-md-12"
-                style={{ backgroundColor: "#293846", color: "white" }}
+                style={{ backgroundColor: "#293846", color: "white"}}
               >
                 <br />
                 <div className="form-group">
                   <label>
                     <strong>
-                      Current Balance : {this.state.currentbalance}
+                   Current Balance : {this.state.currentbalance}
+                    </strong>
+                    <strong style={{marginLeft:'200px'}}>
+                    {moment(this.state.time).format('MMMM Do YYYY, h:mm:ss a')}
                     </strong>
                   </label>
                 </div>
               </div>
             </div>
-            <section className="screenview">
-              <div className="container">
+            <section >
+              <div className="container ">
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
@@ -825,7 +852,7 @@ class AddProduct extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12">
+                  <div className="col-md-12">
                     <form id="contact-form">
                       <div className="messages" />
                       <div className="row">
