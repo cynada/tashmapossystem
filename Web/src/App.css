@@ -85,3 +85,13 @@ height:20px;
  background:url(https://i.stack.imgur.com/5Vv2z.png) no-repeat ;
 background-position:0 0;
 }
+
+@media only screen and (max-width: 950px) {
+  .screenview{
+    margin-left:1px!important
+ }
+}
+
+.screenview{
+   margin-left:-250px
+}
