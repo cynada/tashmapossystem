@@ -636,7 +636,12 @@ class AddProduct extends Component {
     let optionItems =
       prod == null || prod == undefined
         ? null
-        : prod.map((item) => (
+        : prod.filter((item) => {
+          if(item.ISAdmin == 0){
+            return item;
+          }
+        })
+        .map((item) => (
             <option key={item.EPFNumber} value={item.EPFNumber}>
               {item.Name}
             </option>
@@ -742,7 +747,7 @@ class AddProduct extends Component {
               />
             </div>
           </div>
-          <div className="col-md-9">
+          <div className="col-md-12" style={{marginLeft:'265px'}}>
             <div className="row">
               <div
                 className="col-md-12"
@@ -758,7 +763,7 @@ class AddProduct extends Component {
                 </div>
               </div>
             </div>
-            <section>
+            <section className="screenview">
               <div className="container">
                 <div className="row">
                   <div className="col-md-6">
