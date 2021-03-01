@@ -169,7 +169,7 @@ router.post("/signin", async (req, res) => {
             res.send({ login: false });
           }
           if (results[0][0].LoginStatus == 1) {
-            res.send({ login: true, isAdmin: results[0][0].IsAdmin == 1 ? true : false });
+            res.send({ login: true, isAdmin: results[0][0].IsAdmin == 1 ? true : false, name : results[0][0].Name });
           }
         }
       );

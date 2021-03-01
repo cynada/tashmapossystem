@@ -57,6 +57,7 @@ class AddProduct extends Component {
       qtyLeft: 0,
       userId:0,
       time:new Date(),
+      username:""
     };
   }
 
@@ -67,13 +68,15 @@ class AddProduct extends Component {
   };
 
   componentWillMount() {
+    
     let peticash = sessionStorage.getItem("peticash");
     if (peticash == null || peticash == undefined) {
       this.renderPopupModal();
     }
     else{
       this.setState({
-        currentbalance:peticash
+        currentbalance:peticash,
+        username:sessionStorage.getItem("loggedinuser")
       })
     }
 
@@ -729,13 +732,35 @@ class AddProduct extends Component {
     let categorydrop = this.renderCategoryDrop(this.state.categoryList);
     let productdrop = this.renderProductDrop(this.state.filteredProductList);
     let userdrop = this.renderUserDrop(this.state.userList);
-
     let paymentmethoddrop = this.renderPaymentMethodDrop(
       this.state.paymentmethods
     );
-
+  
     // categoryDropDown = this.categoryDropDownList()
     return (
+      <div>
+      <div className="row">
+      <div
+        className="col-md-12"
+        style={{ backgroundColor: "#293846", color: "white"}}
+      >
+        <br />
+        <div className="form-group">
+          <label>
+          <strong style={{marginLeft:''}}>
+            Welcome {this.state.username} !
+            </strong>
+            <strong style={{marginLeft:'200px'}}>
+           Current Balance : {this.state.currentbalance}
+            </strong>
+            <strong style={{marginLeft:'250px'}}>
+            {moment(this.state.time).format('MMMM Do YYYY, h:mm:ss a')}
+            </strong>
+           
+          </label>
+        </div>
+      </div>
+    </div>
       <div className="page-content">
       
           {/* <div className="row">
@@ -772,7 +797,7 @@ class AddProduct extends Component {
           </div>
       
           <div className="col-md-9">
-          <div className="row">
+          {/* <div className="row">
               <div
                 className="col-md-12"
                 style={{ backgroundColor: "#293846", color: "white"}}
@@ -786,10 +811,13 @@ class AddProduct extends Component {
                     <strong style={{marginLeft:'200px'}}>
                     {moment(this.state.time).format('MMMM Do YYYY, h:mm:ss a')}
                     </strong>
+                    <strong style={{marginLeft:'250px'}}>
+                    Welcome {this.state.username} !
+                    </strong>
                   </label>
                 </div>
               </div>
-            </div>
+            </div> */}
             <section >
               <div className="container ">
                 <div className="row">
@@ -1146,7 +1174,7 @@ class AddProduct extends Component {
             </section>
           </div>
         </div>
-      </div>
+      </div></div>
     );
   }
 }

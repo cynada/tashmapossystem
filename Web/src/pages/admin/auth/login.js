@@ -43,7 +43,7 @@ class Login extends Component {
     CommonPost("users/signin", formdata)
       .then((res) => res.json())
       .then((json) => {
-        // sessionStorage.setItem("token", json.token);
+        sessionStorage.setItem("loggedinuser",json.name);
         // this.setState({
         //   token: json.token,
         //   isloader: false,
@@ -84,6 +84,7 @@ class Login extends Component {
             timer: 1500,
           });
           console.log("LOGGEDIN!");
+          
           this.props.history.push("/user-addorder");
         }
       })
